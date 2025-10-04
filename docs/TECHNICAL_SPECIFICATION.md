@@ -1,2143 +1,1708 @@
 # Technical Specification Document
-## Finance Calculator Hub - Indian Market
+## Finance Calculator Hub - Modern Architecture
+### Containerized Next.js Application
 
-**Document Version:** 1.0  
+**Document Version:** 2.0  
 **Last Updated:** October 4, 2025  
-**Status:** Approved for Development  
-**Classification:** Internal Use
+**Status:** Ready for Development  
+**Architecture:** Modern Containerized Stack  
+**Deployment:** Portainer (Local Server) → Cloud (Future)
 
 ---
 
-## Document Control
+## Executive Summary
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | Oct 4, 2025 | Development Team | Initial technical specification |
+### Vision
+Build a **world-class financial calculator platform** with:
+- 🎨 **Beautiful UI** - Inspired by Stripe, Linear, Vercel, Framer
+- ⚡ **Blazing Fast** - <1s page loads, instant calculations
+- 🏗️ **Modern Stack** - Next.js 14+, TypeScript, Tailwind CSS
+- 🐳 **Containerized** - Docker containers managed via Portainer
+- 📱 **Mobile-First** - Responsive design, PWA capabilities
+- 🎯 **SEO Optimized** - Server-side rendering, perfect Lighthouse scores
+
+### Tech Philosophy
+- **Quality over quantity** - 3 perfect calculators > 10 mediocre ones
+- **Performance is a feature** - Sub-second load times, 60fps animations
+- **Design excellence** - Every pixel matters, delightful interactions
+- **Developer experience** - Hot reload, type safety, modern tooling
 
 ---
 
 ## Table of Contents
 
-1. [Executive Summary](#1-executive-summary)
-2. [System Architecture](#2-system-architecture)
-3. [Technology Stack](#3-technology-stack)
+1. [Technology Stack](#1-technology-stack)
+2. [Architecture Overview](#2-architecture-overview)
+3. [Container Structure](#3-container-structure)
 4. [Database Design](#4-database-design)
-5. [Application Components](#5-application-components)
-6. [Security Architecture](#6-security-architecture)
-7. [Performance Requirements](#7-performance-requirements)
-8. [API Specifications](#8-api-specifications)
-9. [Deployment Architecture](#9-deployment-architecture)
-10. [Monitoring & Observability](#10-monitoring--observability)
-11. [Development Workflow](#11-development-workflow)
-12. [Testing Strategy](#12-testing-strategy)
+5. [Frontend Architecture](#5-frontend-architecture)
+6. [Backend API](#6-backend-api)
+7. [UI/UX Design System](#7-uiux-design-system)
+8. [Performance Strategy](#8-performance-strategy)
+9. [Deployment Setup](#9-deployment-setup)
+10. [Development Workflow](#10-development-workflow)
 
 ---
 
-## 1. Executive Summary
+## 1. Technology Stack
 
-### 1.1 Project Overview
+### 1.1 Core Stack (Modern & Fast)
 
-**Project Name:** Finance Calculator Hub  
-**Target Market:** India  
-**Primary Objective:** Create a high-performance financial calculator platform monetized through AdSense  
-**Expected Traffic:** 150K+ monthly pageviews by Month 12  
-**Revenue Target:** ₹25-40K/month by Month 12
+```yaml
+Frontend Framework:
+  Framework: Next.js 14+ (App Router)
+  Language: TypeScript 5+
+  Styling: Tailwind CSS 3+ + shadcn/ui
+  State: Zustand (lightweight, <1KB)
+  Forms: React Hook Form + Zod
+  Charts: Recharts + Framer Motion
+  
+Why Next.js:
+  ✓ Server-side rendering (SSR) for SEO
+  ✓ Static site generation (SSG) for performance
+  ✓ Built-in image optimization
+  ✓ API routes (no separate backend needed)
+  ✓ Hot module replacement (instant dev updates)
+  ✓ Best-in-class developer experience
+  ✓ Used by: Vercel, TikTok, Twitch, Hulu, Nike
 
-### 1.2 Key Technical Goals
+Backend:
+  Runtime: Node.js 20 LTS
+  API: Next.js API Routes (REST)
+  Database: PostgreSQL 16 (modern, reliable, fast)
+  ORM: Prisma (type-safe, auto-completion)
+  Cache: Redis 7 (in-memory caching)
+  Search: MeiliSearch (optional, Phase 2)
 
-- **Page Load Time:** < 2 seconds (mobile & desktop)
-- **Uptime:** 99.9% availability
-- **Scalability:** Support 500K+ pageviews/month
-- **SEO Performance:** PageSpeed score 85+ (mobile), 95+ (desktop)
-- **Mobile-First:** Optimized for 70% mobile traffic
+Infrastructure:
+  Containerization: Docker + Docker Compose
+  Management: Portainer CE (web UI)
+  Web Server: Nginx (reverse proxy, SSL)
+  Monitoring: Grafana + Prometheus (optional)
+  
+Deployment Targets:
+  Phase 1: Local Server (Portainer)
+  Phase 2: Cloud Options:
+    - Vercel (best for Next.js, $20/mo)
+    - Railway ($5-20/mo)
+    - DigitalOcean App Platform ($12/mo)
+    - AWS Lightsail Containers ($7/mo)
+```
 
-### 1.3 Technology Decisions
+### 1.2 UI Component Library
 
-| Component | Technology | Rationale |
-|-----------|-----------|-----------|
-| CMS | WordPress 6.4+ | Fast development, rich plugin ecosystem, excellent SEO |
-| Language | PHP 8.2+ | WordPress requirement, modern features |
-| Database | MySQL 8.0+ | WordPress standard, managed hosting support |
-| Frontend | JavaScript ES6+ | Real-time calculations, no framework overhead |
-| Caching | Redis | High performance, object caching |
-| CDN | Cloudflare | Global distribution, security, free tier |
-| Hosting | Cloudways/WP Engine | Managed WordPress, optimization included |
+```yaml
+Component System: shadcn/ui
+Why: 
+  ✓ Beautiful by default (inspired by Linear, Vercel)
+  ✓ Radix UI primitives (accessible, unstyled)
+  ✓ Tailwind CSS (utility-first, customizable)
+  ✓ Copy-paste components (no npm install)
+  ✓ TypeScript native
+  ✓ Dark mode built-in
+
+Key Components We'll Use:
+  - Button (with variants, sizes, loading states)
+  - Card (glassmorphism, shadows, borders)
+  - Input (with icons, validation states)
+  - Slider (smooth animations, tooltips)
+  - Tabs (calculator types)
+  - Dialog (modals for detailed results)
+  - Toast (notifications)
+  - Sheet (mobile sidebar)
+  - Accordion (FAQs)
+
+Animation Library: Framer Motion
+Why:
+  ✓ Smooth 60fps animations
+  ✓ Gesture support (drag, swipe)
+  ✓ Layout animations (magic move)
+  ✓ Spring physics (natural feel)
+  
+Chart Library: Recharts + D3.js
+Why:
+  ✓ Responsive charts
+  ✓ Smooth animations
+  ✓ Customizable
+  ✓ TypeScript support
+```
+
+### 1.3 Design Inspiration
+
+```yaml
+Visual References:
+  Stripe.com:
+    - Clean typography
+    - Subtle gradients
+    - Smooth animations
+    - Perfect spacing
+  
+  Linear.app:
+    - Keyboard shortcuts
+    - Command palette
+    - Instant feedback
+    - Dark mode excellence
+  
+  Vercel.com:
+    - Brutalist design
+    - Bold typography
+    - Fast transitions
+    - Minimalist UI
+  
+  Framer.com:
+    - Interactive prototypes
+    - Smooth animations
+    - Modern gradients
+    - Glass morphism
+
+Design Principles:
+  1. Clarity > Cleverness
+  2. Fast > Flashy
+  3. Consistent > Creative
+  4. Simple > Complex
+```
 
 ---
 
-## 2. System Architecture
+## 2. Architecture Overview
 
 ### 2.1 High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         CLIENT LAYER                             │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │  Browsers: Chrome, Safari, Firefox, Edge                 │  │
-│  │  Devices: Mobile (70%), Desktop (25%), Tablet (5%)       │  │
-│  │  Locations: India (Tier 1, 2, 3 cities)                 │  │
-│  └──────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓ HTTPS
-┌─────────────────────────────────────────────────────────────────┐
-│                         EDGE LAYER                               │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │              Cloudflare CDN + Security                   │  │
-│  │  • Global edge caching (30+ locations)                   │  │
-│  │  • DDoS protection (automatic)                           │  │
-│  │  • Web Application Firewall (WAF)                        │  │
-│  │  • SSL/TLS termination                                   │  │
-│  │  • Brotli/Gzip compression                               │  │
-│  │  • Auto-minification (JS, CSS, HTML)                     │  │
-│  └──────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    APPLICATION LAYER                             │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │              WordPress Application Server                 │  │
-│  │                                                           │  │
-│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │  │
-│  │  │   Apache/   │  │  WordPress  │  │   Custom    │    │  │
-│  │  │   Nginx     │→ │   Core      │→ │   Plugins   │    │  │
-│  │  │  (HTTP/2)   │  │   PHP-FPM   │  │  & Themes   │    │  │
-│  │  └─────────────┘  └─────────────┘  └─────────────┘    │  │
-│  │                                                           │  │
-│  │  Server Specs (Phase 1):                                 │  │
-│  │  • 2 vCPUs, 4GB RAM, 80GB SSD                           │  │
-│  │  • Ubuntu 22.04 LTS or managed platform                 │  │
-│  │  • PHP 8.2+ with OPcache enabled                        │  │
-│  └──────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                      CACHING LAYER                               │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │  ┌───────────────┐  ┌──────────────┐  ┌─────────────┐  │  │
-│  │  │  Page Cache   │  │ Object Cache │  │ Opcode Cache│  │  │
-│  │  │  (W3 Total /  │  │   (Redis)    │  │  (OPcache)  │  │  │
-│  │  │  WP Rocket)   │  │              │  │             │  │  │
-│  │  └───────────────┘  └──────────────┘  └─────────────┘  │  │
-│  │                                                           │  │
-│  │  Cache Hierarchy:                                        │  │
-│  │  1. Browser cache (static assets: 1 year)               │  │
-│  │  2. CDN cache (pages: 1 hour, assets: 1 week)          │  │
-│  │  3. Page cache (full HTML: 24 hours)                    │  │
-│  │  4. Object cache (DB queries: 5 mins - 1 hour)         │  │
-│  │  5. OPcache (compiled PHP: until deployment)            │  │
-│  └──────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                       DATA LAYER                                 │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │              MySQL 8.0+ Database                         │  │
-│  │                                                           │  │
-│  │  Primary Database:                                       │  │
-│  │  • WordPress core tables (wp_posts, wp_users, etc.)     │  │
-│  │  • Custom calculator tables (usage logs, saved calcs)   │  │
-│  │  • Interest rate cache table                            │  │
-│  │                                                           │  │
-│  │  Configuration:                                          │  │
-│  │  • InnoDB storage engine                                │  │
-│  │  • utf8mb4 character set                                │  │
-│  │  • Automated daily backups (30-day retention)           │  │
-│  │  • Point-in-time recovery capability                    │  │
-│  └──────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────────┐
-│                    EXTERNAL SERVICES                             │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │  • Google Analytics 4 (user behavior tracking)           │  │
-│  │  • Google Search Console (SEO monitoring)                │  │
-│  │  • Google AdSense (monetization)                         │  │
-│  │  • Cloudflare Analytics (performance metrics)            │  │
-│  │  • GitHub (version control & CI/CD)                      │  │
-│  │  • Uptime Robot (availability monitoring)                │  │
-│  └──────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│                    USER DEVICES                          │
+│  📱 Mobile (70%)  💻 Desktop (25%)  🖥️ Tablet (5%)     │
+└─────────────────────────────────────────────────────────┘
+                         ↓ HTTPS
+┌─────────────────────────────────────────────────────────┐
+│                  CLOUDFLARE CDN (Free)                   │
+│  • Global edge caching                                   │
+│  • DDoS protection                                       │
+│  • SSL/TLS                                               │
+│  • Web Application Firewall                              │
+└─────────────────────────────────────────────────────────┘
+                         ↓
+┌─────────────────────────────────────────────────────────┐
+│              YOUR LOCAL SERVER (Portainer)               │
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │            Nginx Reverse Proxy                     │ │
+│  │  • SSL termination                                 │ │
+│  │  • Load balancing                                  │ │
+│  │  • Gzip/Brotli compression                        │ │
+│  │  Port: 80 (HTTP), 443 (HTTPS)                     │ │
+│  └────────────────────────────────────────────────────┘ │
+│                         ↓                                │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │        Next.js Application (Container 1)           │ │
+│  │  • Server-side rendering                           │ │
+│  │  • API routes                                      │ │
+│  │  • Static optimization                             │ │
+│  │  Port: 3000 (internal)                            │ │
+│  │  Image: node:20-alpine                            │ │
+│  └────────────────────────────────────────────────────┘ │
+│                         ↓                                │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │        PostgreSQL Database (Container 2)           │ │
+│  │  • User data                                       │ │
+│  │  • Calculator logs                                 │ │
+│  │  • Analytics                                       │ │
+│  │  Port: 5432 (internal)                            │ │
+│  │  Image: postgres:16-alpine                        │ │
+│  │  Volume: /data/postgres                           │ │
+│  └────────────────────────────────────────────────────┘ │
+│                         ↓                                │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │           Redis Cache (Container 3)                │ │
+│  │  • Session storage                                 │ │
+│  │  • API response cache                              │ │
+│  │  • Rate limiting                                   │ │
+│  │  Port: 6379 (internal)                            │ │
+│  │  Image: redis:7-alpine                            │ │
+│  └────────────────────────────────────────────────────┘ │
+│                                                          │
+│  ┌────────────────────────────────────────────────────┐ │
+│  │        Portainer Agent (Container 4)               │ │
+│  │  • Container management                            │ │
+│  │  • Monitoring                                      │ │
+│  │  • Logs viewing                                    │ │
+│  │  Port: 9000 (web UI)                              │ │
+│  └────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────┘
 ```
 
 ### 2.2 Request Flow
 
-#### 2.2.1 First-Time Visitor
-
 ```
-User Request → Cloudflare CDN (MISS) → WordPress Server →
-Calculate Response → Cache at all levels → Serve to user
-Total Time: ~1.5-2.5 seconds
-```
+1. User visits financecalc.in
+   ↓
+2. Cloudflare CDN (cache check)
+   ↓
+3. Your Server (Nginx)
+   ↓
+4. Next.js App
+   ├─→ Static pages (cached, instant)
+   ├─→ API routes (calculator logic)
+   └─→ Database queries (PostgreSQL)
+   ↓
+5. Redis cache (fast reads)
+   ↓
+6. Response back to user
 
-#### 2.2.2 Returning Visitor (Cached)
-
-```
-User Request → Cloudflare CDN (HIT) → Serve from edge
-Total Time: ~300-500ms
-```
-
-#### 2.2.3 Calculator Interaction
-
-```
-User Input → JavaScript Validation → Client-side Calculation →
-Display Results → (Optional) API call to log usage →
-Update Analytics
-Total Time: <100ms for calculation
-```
-
-### 2.3 Component Diagram
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    FRONTEND LAYER                        │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌──────────────┐  ┌──────────────┐  ┌─────────────┐  │
-│  │  HTML Pages  │  │   CSS Files  │  │  JavaScript │  │
-│  │  (WordPress  │  │  (Tailwind)  │  │  (Vanilla)  │  │
-│  │   Template)  │  │              │  │             │  │
-│  └──────────────┘  └──────────────┘  └─────────────┘  │
-│         │                  │                  │         │
-│         └──────────────────┴──────────────────┘         │
-│                           │                              │
-│                  ┌────────▼────────┐                    │
-│                  │  WordPress Theme │                    │
-│                  │  (Astra/GP Pro)  │                    │
-│                  └─────────────────┘                    │
-└─────────────────────────────────────────────────────────┘
-                           │
-┌──────────────────────────▼──────────────────────────────┐
-│                    PLUGIN LAYER                          │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  ┌──────────────────┐  ┌───────────────────────────┐  │
-│  │  Calculator      │  │  SEO Plugin               │  │
-│  │  Plugin (Custom) │  │  (Rank Math/Yoast)        │  │
-│  └──────────────────┘  └───────────────────────────┘  │
-│                                                          │
-│  ┌──────────────────┐  ┌───────────────────────────┐  │
-│  │  Caching Plugin  │  │  Security Plugin          │  │
-│  │  (W3TC/WPRocket) │  │  (Wordfence/Sucuri)       │  │
-│  └──────────────────┘  └───────────────────────────┘  │
-│                                                          │
-│  ┌──────────────────┐  ┌───────────────────────────┐  │
-│  │  AdSense Plugin  │  │  Analytics Plugin         │  │
-│  │  (Advanced Ads)  │  │  (MonsterInsights)        │  │
-│  └──────────────────┘  └───────────────────────────┘  │
-└─────────────────────────────────────────────────────────┘
-                           │
-┌──────────────────────────▼──────────────────────────────┐
-│                    WORDPRESS CORE                        │
-├─────────────────────────────────────────────────────────┤
-│                                                          │
-│  • Post/Page Management                                 │
-│  • User Authentication & Authorization                  │
-│  • Media Library                                        │
-│  • REST API                                             │
-│  • Hook System (actions/filters)                        │
-│  • Database Abstraction Layer (wpdb)                    │
-│                                                          │
-└─────────────────────────────────────────────────────────┘
+Total time: <500ms (cached) or <1.5s (uncached)
 ```
 
 ---
 
-## 3. Technology Stack
+## 3. Container Structure
 
-### 3.1 Core Technologies
-
-#### 3.1.1 Backend Stack
+### 3.1 Docker Compose Configuration
 
 ```yaml
-Platform:
-  CMS: WordPress 6.4+
-  PHP Version: 8.2+
-  Web Server: Nginx 1.24+ OR Apache 2.4+
-  Database: MySQL 8.0+ OR MariaDB 10.11+
-  
-PHP Extensions (Required):
-  - php-mbstring (multibyte string handling)
-  - php-curl (API calls)
-  - php-xml (XML processing)
-  - php-zip (plugin/theme installation)
-  - php-gd or php-imagick (image processing)
-  - php-intl (internationalization)
-  - php-redis (object caching)
-  - php-opcache (opcode caching)
-  
-WordPress Configuration:
-  WP_DEBUG: false (production)
-  WP_DEBUG_LOG: true (log to file)
-  WP_CACHE: true
-  WP_MEMORY_LIMIT: 256M
-  WP_MAX_MEMORY_LIMIT: 512M
-  DISALLOW_FILE_EDIT: true (security)
-  AUTOMATIC_UPDATER_DISABLED: true (manual updates)
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # Next.js Application
+  web:
+    container_name: finance-calculator-app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:password@db:5432/financecalc
+      - REDIS_URL=redis://cache:6379
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+      - NEXTAUTH_URL=https://financecalc.in
+    depends_on:
+      - db
+      - cache
+    restart: unless-stopped
+    networks:
+      - finance-network
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+      - /app/.next
+    labels:
+      - "com.portainer.service=finance-calculator"
+
+  # PostgreSQL Database
+  db:
+    container_name: finance-calculator-db
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=financecalc
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    networks:
+      - finance-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  cache:
+    container_name: finance-calculator-cache
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - finance-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Nginx Reverse Proxy
+  nginx:
+    container_name: finance-calculator-nginx
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - nginx-cache:/var/cache/nginx
+    depends_on:
+      - web
+    restart: unless-stopped
+    networks:
+      - finance-network
+
+volumes:
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+  nginx-cache:
+    driver: local
+
+networks:
+  finance-network:
+    driver: bridge
 ```
 
-#### 3.1.2 Frontend Stack
+### 3.2 Dockerfile (Next.js App)
 
-```yaml
-HTML/CSS:
-  HTML Version: HTML5
-  CSS Framework: Tailwind CSS 3.x
-  CSS Preprocessor: PostCSS
-  Responsive Breakpoints:
-    - Mobile: < 768px (primary focus)
-    - Tablet: 768px - 1023px
-    - Desktop: ≥ 1024px
-  
-JavaScript:
-  ECMAScript: ES6+ (transpiled to ES5 for compatibility)
-  No Framework: Vanilla JavaScript for performance
-  Libraries:
-    - Chart.js 4.x (data visualization)
-    - Day.js (date manipulation, lighter than Moment.js)
-  Build Tool: Webpack 5 OR Vite 4
-  
-Fonts:
-  Primary: System fonts for performance
-  Fallback: Google Fonts (Roboto/Inter)
-  Loading: font-display: swap
-  Subset: Latin only
+```dockerfile
+# Dockerfile
+FROM node:20-alpine AS base
+
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Install dependencies based on the preferred package manager
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Environment variables for build time
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# Build Next.js
+RUN npm run build
+
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+
+# Automatically leverage output traces to reduce image size
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+ENV HOSTNAME "0.0.0.0"
+
+CMD ["node", "server.js"]
 ```
 
-#### 3.1.3 Database Schema
+### 3.3 Nginx Configuration
 
-```sql
--- Character Set Configuration
-SET NAMES utf8mb4;
-SET CHARACTER SET utf8mb4;
-COLLATE utf8mb4_unicode_ci;
+```nginx
+# nginx/nginx.conf
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log warn;
+pid /var/run/nginx.pid;
 
--- Calculator Usage Logging Table
-CREATE TABLE fc_calculator_logs (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    calculator_type VARCHAR(50) NOT NULL,
-    input_data JSON NOT NULL,
-    result_data JSON,
-    user_ip VARCHAR(45),
-    user_agent TEXT,
-    session_id VARCHAR(64),
-    page_url VARCHAR(500),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
-    INDEX idx_calculator_type (calculator_type),
-    INDEX idx_created_at (created_at),
-    INDEX idx_session_id (session_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+events {
+    worker_connections 2048;
+    use epoll;
+    multi_accept on;
+}
 
--- Saved Calculations (Phase 3 - User Accounts)
-CREATE TABLE fc_saved_calculations (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT UNSIGNED NOT NULL,
-    calculator_type VARCHAR(50) NOT NULL,
-    title VARCHAR(255),
-    input_data JSON NOT NULL,
-    result_data JSON NOT NULL,
-    is_private BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    FOREIGN KEY (user_id) REFERENCES wp_users(ID) ON DELETE CASCADE,
-    INDEX idx_user_id (user_id),
-    INDEX idx_calculator_type (calculator_type),
-    INDEX idx_created_at (created_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+http {
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
 
--- Interest Rate Cache (Phase 2)
-CREATE TABLE fc_interest_rates (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    bank_name VARCHAR(100) NOT NULL,
-    product_type VARCHAR(50) NOT NULL COMMENT 'FD, RD, Home_Loan, Car_Loan, Personal_Loan',
-    rate_type VARCHAR(20) NOT NULL COMMENT 'Fixed, Floating, Variable',
-    tenure_months INT COMMENT 'Loan/deposit tenure in months',
-    interest_rate DECIMAL(5,2) NOT NULL COMMENT 'Annual interest rate',
-    effective_from DATE NOT NULL,
-    effective_to DATE,
-    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    source_url TEXT,
-    is_active BOOLEAN DEFAULT TRUE,
-    
-    UNIQUE KEY unique_rate (bank_name, product_type, rate_type, tenure_months, effective_from),
-    INDEX idx_product_type (product_type),
-    INDEX idx_bank_name (bank_name),
-    INDEX idx_is_active (is_active),
-    INDEX idx_effective_from (effective_from)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    # Logging
+    log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+    access_log /var/log/nginx/access.log main;
 
--- Content Performance Metrics (Analytics)
-CREATE TABLE fc_content_metrics (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    post_id BIGINT UNSIGNED NOT NULL,
-    metric_date DATE NOT NULL,
-    pageviews INT DEFAULT 0,
-    unique_visitors INT DEFAULT 0,
-    avg_time_on_page INT DEFAULT 0 COMMENT 'Seconds',
-    bounce_rate DECIMAL(5,2) DEFAULT 0.00,
-    calculator_interactions INT DEFAULT 0,
-    adsense_impressions INT DEFAULT 0,
-    adsense_clicks INT DEFAULT 0,
-    revenue_generated DECIMAL(10,2) DEFAULT 0.00 COMMENT 'In INR',
-    
-    FOREIGN KEY (post_id) REFERENCES wp_posts(ID) ON DELETE CASCADE,
-    UNIQUE KEY unique_daily_metric (post_id, metric_date),
-    INDEX idx_metric_date (metric_date),
-    INDEX idx_revenue (revenue_generated)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    # Performance
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    client_max_body_size 20M;
 
--- AB Test Tracking (Phase 3)
-CREATE TABLE fc_ab_tests (
-    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    test_name VARCHAR(100) NOT NULL,
-    variant VARCHAR(50) NOT NULL COMMENT 'A, B, C, etc.',
-    page_url VARCHAR(500),
-    conversions INT DEFAULT 0,
-    impressions INT DEFAULT 0,
-    conversion_rate DECIMAL(5,2) GENERATED ALWAYS AS (
-        CASE WHEN impressions > 0 
-        THEN (conversions / impressions) * 100 
-        ELSE 0 END
-    ) STORED,
-    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    ended_at TIMESTAMP NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    
-    INDEX idx_test_name (test_name),
-    INDEX idx_is_active (is_active)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-```
+    # Gzip compression
+    gzip on;
+    gzip_vary on;
+    gzip_proxied any;
+    gzip_comp_level 6;
+    gzip_types text/plain text/css text/xml text/javascript 
+               application/json application/javascript application/xml+rss 
+               application/rss+xml font/truetype font/opentype 
+               application/vnd.ms-fontobject image/svg+xml;
 
-### 3.2 WordPress Plugins
+    # Brotli compression (if module available)
+    brotli on;
+    brotli_comp_level 6;
+    brotli_types text/plain text/css text/xml text/javascript 
+                 application/json application/javascript application/xml+rss;
 
-#### 3.2.1 Essential Plugins (Phase 1)
+    # Cache settings
+    proxy_cache_path /var/cache/nginx levels=1:2 keys_zone=STATIC:10m 
+                     inactive=7d use_temp_path=off;
 
-```yaml
-SEO:
-  Plugin: Rank Math Pro OR Yoast SEO Premium
-  Purpose: On-page SEO, schema markup, sitemap generation
-  Version: Latest stable
-  License: $59-$99/year
-  
-Performance:
-  Plugin: WP Rocket OR W3 Total Cache
-  Purpose: Page caching, minification, CDN integration
-  Version: Latest stable
-  License: $49/year (WP Rocket) or Free (W3TC)
-  Features:
-    - Page caching
-    - Browser caching
-    - GZIP compression
-    - Minification (HTML, CSS, JS)
-    - Lazy loading images
-    - Database optimization
-  
-Security:
-  Plugin: Wordfence Security OR Sucuri Security
-  Purpose: Firewall, malware scanning, brute force protection
-  Version: Latest stable
-  License: Free (basic) or $99/year (premium)
-  Features:
-    - Web Application Firewall (WAF)
-    - Malware scanner
-    - Login security (2FA, limit attempts)
-    - Real-time threat defense
-  
-Image Optimization:
-  Plugin: EWWW Image Optimizer OR ShortPixel
-  Purpose: Automatic image compression, WebP conversion
-  Version: Latest stable
-  License: Free (limited) or $7/month
-```
+    # Upstream Next.js
+    upstream nextjs_upstream {
+        server web:3000;
+        keepalive 64;
+    }
 
-#### 3.2.2 Custom Calculator Plugin
+    # HTTP to HTTPS redirect
+    server {
+        listen 80;
+        server_name financecalc.in www.financecalc.in;
+        
+        location /.well-known/acme-challenge/ {
+            root /var/www/certbot;
+        }
+        
+        location / {
+            return 301 https://$server_name$request_uri;
+        }
+    }
 
-```yaml
-Plugin Name: FC Calculator Suite
-Description: Custom financial calculators for Indian market
-Version: 1.0.0
-Author: Development Team
-License: Proprietary
+    # HTTPS server
+    server {
+        listen 443 ssl http2;
+        server_name financecalc.in www.financecalc.in;
 
-Features:
-  - Multiple calculator types (SIP, EMI, FD, RD, PPF, ELSS, Tax)
-  - Shortcode system for easy embedding
-  - REST API endpoints for AJAX calculations
-  - Usage analytics tracking
-  - Admin dashboard for calculator management
-  - Export/import calculator configurations
+        # SSL certificates (Let's Encrypt)
+        ssl_certificate /etc/nginx/ssl/fullchain.pem;
+        ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+        
+        # SSL configuration
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
+        ssl_session_cache shared:SSL:10m;
+        ssl_session_timeout 10m;
 
-File Structure:
-  fc-calculator-suite/
-  ├── fc-calculator-suite.php (main plugin file)
-  ├── includes/
-  │   ├── class-calculator-base.php
-  │   ├── class-sip-calculator.php
-  │   ├── class-emi-calculator.php
-  │   ├── class-fd-calculator.php
-  │   └── class-calculator-api.php
-  ├── assets/
-  │   ├── css/
-  │   │   └── calculator.css
-  │   └── js/
-  │       ├── calculator-base.js
-  │       └── chart-utils.js
-  ├── templates/
-  │   ├── calculator-sip.php
-  │   ├── calculator-emi.php
-  │   └── calculator-results.php
-  └── admin/
-      ├── class-calculator-admin.php
-      └── views/
-          └── dashboard.php
+        # Security headers
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+        add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+        add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
 
-Shortcode Examples:
-  [fc_calculator type="sip"]
-  [fc_calculator type="emi" loan_type="home"]
-  [fc_calculator type="fd" bank="sbi"]
-```
+        # Next.js static files with caching
+        location /_next/static {
+            proxy_pass http://nextjs_upstream;
+            proxy_cache STATIC;
+            proxy_cache_valid 200 7d;
+            proxy_cache_use_stale error timeout invalid_header updating http_500 http_502 http_503 http_504;
+            add_header Cache-Control "public, max-age=31536000, immutable";
+            add_header X-Cache-Status $upstream_cache_status;
+        }
 
-### 3.3 Hosting Infrastructure
+        # Public static files
+        location /public {
+            proxy_pass http://nextjs_upstream;
+            proxy_cache STATIC;
+            proxy_cache_valid 200 1d;
+            add_header Cache-Control "public, max-age=86400";
+        }
 
-#### 3.3.1 Hosting Options
-
-**Option 1: Cloudways (Recommended for Phase 1-2)**
-
-```yaml
-Provider: Cloudways (DigitalOcean backend)
-Plan: DO Basic (Phase 1) → DO Premium (Phase 2+)
-
-Phase 1 Specs (0-50K pageviews/month):
-  CPU: 2 vCPUs
-  RAM: 4GB
-  Storage: 80GB SSD
-  Bandwidth: 4TB/month
-  Cost: $24/month
-  
-Included Features:
-  - Managed WordPress
-  - Built-in Redis (object caching)
-  - Free SSL certificate (Let's Encrypt)
-  - Staging environment
-  - Automated backups (7 days retention)
-  - Built-in CDN (Cloudflare integration)
-  - Git integration
-  - SSH/SFTP access
-  - WordPress management tools
-  - 24/7 support
-
-Scaling Path:
-  50K-150K pageviews: Upgrade to 4 vCPU, 8GB RAM ($48/month)
-  150K-500K pageviews: Premium plan with load balancer ($96/month)
-  500K+ pageviews: Custom enterprise setup
-```
-
-**Option 2: WP Engine (Alternative - Premium)**
-
-```yaml
-Provider: WP Engine
-Plan: Startup (Phase 1) → Growth (Phase 2+)
-
-Phase 1 Specs:
-  Storage: 10GB
-  Bandwidth: 50GB/month
-  Sites: 1
-  Visits: 25K/month
-  Cost: $30/month (annual) or $35/month (monthly)
-  
-Included Features:
-  - Fully managed WordPress
-  - Automatic updates
-  - Daily automated backups
-  - Free SSL
-  - Global CDN (powered by MaxCDN)
-  - Staging environment
-  - Page performance monitoring
-  - Threat detection & blocking
-  - 24/7 support
-
-Advantages:
-  - Best WordPress performance (Genesis Framework optimized)
-  - Excellent support
-  - Built-in performance tools
-  
-Disadvantages:
-  - Higher cost per visit
-  - Visit-based pricing (can be limiting)
-  - Less control than Cloudways
-```
-
-#### 3.3.2 CDN Configuration
-
-```yaml
-Provider: Cloudflare
-Plan: Free (Phase 1) → Pro ($20/month, Phase 2+)
-
-DNS Configuration:
-  - Nameservers: Point domain to Cloudflare
-  - Proxy status: Enabled (orange cloud)
-  - SSL/TLS: Full (strict)
-  
-Page Rules (Free plan: 3 rules):
-  1. Cache Everything:
-     URL: financecalc.in/*
-     Cache Level: Cache Everything
-     Edge Cache TTL: 1 hour
-  
-  2. Bypass Cache for Dynamic Content:
-     URL: financecalc.in/wp-admin/*
-     Cache Level: Bypass
-  
-  3. Bypass Cache for API:
-     URL: financecalc.in/wp-json/*
-     Cache Level: Bypass
-
-Performance Settings:
-  - Auto Minify: HTML, CSS, JavaScript (ON)
-  - Brotli Compression: ON
-  - Early Hints: ON
-  - HTTP/2: ON
-  - HTTP/3 (QUIC): ON
-  - Rocket Loader: OFF (can break calculators)
-  - Image Optimization: ON (Pro plan)
-  
-Security Settings:
-  - Security Level: Medium
-  - Challenge Passage: 30 minutes
-  - Browser Integrity Check: ON
-  - WAF: ON
-  - DDoS Protection: Automatic
+        # All other requests
+        location / {
+            proxy_pass http://nextjs_upstream;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $host;
+            proxy_set_header X-Forwarded-Port $server_port;
+            
+            # Timeouts
+            proxy_connect_timeout 60s;
+            proxy_send_timeout 60s;
+            proxy_read_timeout 60s;
+        }
+    }
+}
 ```
 
 ---
 
 ## 4. Database Design
 
-### 4.1 WordPress Core Tables (Standard)
+### 4.1 Prisma Schema
 
-```
-wp_posts          - Calculator pages, blog posts
-wp_postmeta       - Custom fields for calculators
-wp_users          - User accounts (Phase 3)
-wp_usermeta       - User preferences
-wp_options        - Site configuration
-wp_terms          - Categories, tags
-wp_term_taxonomy  - Taxonomy definitions
-wp_term_relationships - Content relationships
-wp_comments       - User comments (if enabled)
-wp_commentmeta    - Comment metadata
-```
+```prisma
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
 
-### 4.2 Custom Tables
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
-See section 3.1.3 for complete SQL schema.
-
-### 4.3 Database Optimization
-
-```sql
--- Indexes for Performance
--- WordPress core tables already have indexes, but verify:
-
--- Optimize wp_options table (often bloated)
-ALTER TABLE wp_options ADD INDEX autoload_idx (autoload);
-
--- Optimize wp_postmeta for calculator queries
-ALTER TABLE wp_postmeta ADD INDEX meta_key_value_idx (meta_key, meta_value(20));
-
--- Optimize wp_posts for calculator queries
-ALTER TABLE wp_posts 
-  ADD INDEX type_status_date_idx (post_type, post_status, post_date);
-
--- Database Maintenance Schedule
--- Run weekly via WP-CLI cron:
--- wp db optimize
--- wp transient delete --expired
--- wp cache flush
-```
-
-### 4.4 Data Retention Policy
-
-```yaml
-Calculator Usage Logs:
-  Retention: 2 years
-  Cleanup: Automated monthly job
-  Archive: Export to CSV before deletion
-
-Saved Calculations (User):
-  Retention: Until user deletes or account closes
-  Inactive Account: Delete after 1 year of inactivity
+// User model (for Phase 3 - user accounts)
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   
-Interest Rate Data:
-  Retention: 5 years (historical data)
-  Archive: Keep forever (compressed)
+  calculations  SavedCalculation[]
+  
+  @@map("users")
+}
 
-Analytics Data:
-  Retention: 3 years
-  Aggregation: Daily → Monthly after 6 months
+// Calculator usage logs
+model CalculatorLog {
+  id            String    @id @default(cuid())
+  calculatorType String   @db.VarChar(50)
+  inputData     Json
+  resultData    Json?
+  userIp        String?   @db.VarChar(45)
+  userAgent     String?   @db.Text
+  sessionId     String?   @db.VarChar(64)
+  pageUrl       String?   @db.VarChar(500)
+  createdAt     DateTime  @default(now())
+  
+  @@index([calculatorType])
+  @@index([createdAt])
+  @@index([sessionId])
+  @@map("calculator_logs")
+}
+
+// Saved calculations (Phase 3)
+model SavedCalculation {
+  id             String    @id @default(cuid())
+  userId         String
+  calculatorType String    @db.VarChar(50)
+  title          String?   @db.VarChar(255)
+  inputData      Json
+  resultData     Json
+  isPrivate      Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([userId])
+  @@index([calculatorType])
+  @@index([createdAt])
+  @@map("saved_calculations")
+}
+
+// Interest rates cache
+model InterestRate {
+  id            String    @id @default(cuid())
+  bankName      String    @db.VarChar(100)
+  productType   String    @db.VarChar(50)
+  rateType      String    @db.VarChar(20)
+  tenureMonths  Int?
+  interestRate  Decimal   @db.Decimal(5, 2)
+  effectiveFrom DateTime  @db.Date
+  effectiveTo   DateTime? @db.Date
+  lastUpdated   DateTime  @default(now()) @updatedAt
+  sourceUrl     String?   @db.Text
+  isActive      Boolean   @default(true)
+  
+  @@unique([bankName, productType, rateType, tenureMonths, effectiveFrom])
+  @@index([productType])
+  @@index([bankName])
+  @@index([isActive])
+  @@map("interest_rates")
+}
+
+// Content metrics
+model ContentMetric {
+  id                  String   @id @default(cuid())
+  pageSlug            String   @db.VarChar(255)
+  metricDate          DateTime @db.Date
+  pageviews           Int      @default(0)
+  uniqueVisitors      Int      @default(0)
+  avgTimeOnPage       Int      @default(0)
+  bounceRate          Decimal  @db.Decimal(5, 2)
+  calculatorInteractions Int   @default(0)
+  revenueGenerated    Decimal  @db.Decimal(10, 2) @default(0)
+  
+  @@unique([pageSlug, metricDate])
+  @@index([metricDate])
+  @@map("content_metrics")
+}
+```
+
+### 4.2 Database Migrations
+
+```bash
+# Initialize Prisma
+npx prisma init
+
+# Create migration
+npx prisma migrate dev --name init
+
+# Generate Prisma Client
+npx prisma generate
+
+# Deploy to production
+npx prisma migrate deploy
+
+# Prisma Studio (database GUI)
+npx prisma studio
 ```
 
 ---
 
-## 5. Application Components
+## 5. Frontend Architecture
 
-### 5.1 Calculator Architecture
+### 5.1 Project Structure
 
-```javascript
-/**
- * Base Calculator Class
- * All calculators extend this base class
- */
-class FCCalculatorBase {
-    constructor(containerId, calculatorType) {
-        this.container = document.getElementById(containerId);
-        this.type = calculatorType;
-        this.inputs = {};
-        this.results = {};
-        this.validationRules = {};
-        this.charts = {};
-        
-        this.init();
-    }
-    
-    init() {
-        this.renderUI();
-        this.attachEventListeners();
-        this.loadDefaults();
-    }
-    
-    // Abstract methods - must be implemented by child classes
-    calculate() {
-        throw new Error('calculate() must be implemented');
-    }
-    
-    displayResults() {
-        throw new Error('displayResults() must be implemented');
-    }
-    
-    // Common methods available to all calculators
-    validate(field) {
-        // Input validation logic
-    }
-    
-    formatCurrency(amount) {
-        return new Intl.NumberFormat('en-IN', {
-            style: 'currency',
-            currency: 'INR',
-            maximumFractionDigits: 0
-        }).format(amount);
-    }
-    
-    trackUsage() {
-        // Send to Google Analytics
-        gtag('event', 'calculator_use', {
-            'calculator_type': this.type,
-            'event_category': 'Calculator',
-            'event_label': this.type
-        });
-        
-        // Send to custom API for logging
-        fetch('/wp-json/fc/v1/log', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                type: this.type,
-                inputs: this.inputs,
-                results: this.results
-            })
-        });
-    }
-    
-    share() {
-        if (navigator.share) {
-            navigator.share({
-                title: `${this.type} Calculator Results`,
-                text: this.getShareText(),
-                url: window.location.href
-            });
-        } else {
-            // Fallback: copy to clipboard
-            this.copyToClipboard(window.location.href);
-        }
-    }
-    
-    print() {
-        window.print();
-    }
-    
-    reset() {
-        this.inputs = {};
-        this.results = {};
-        this.clearCharts();
-        this.renderUI();
-    }
-}
+```
+app/
+├── (marketing)/              # Marketing pages (SSG)
+│   ├── page.tsx             # Homepage
+│   ├── about/
+│   ├── blog/
+│   └── layout.tsx
+│
+├── calculators/              # Calculator pages (SSR + CSR)
+│   ├── sip/
+│   │   ├── page.tsx
+│   │   └── components/
+│   │       ├── SIPForm.tsx
+│   │       ├── SIPResults.tsx
+│   │       └── SIPChart.tsx
+│   ├── emi/
+│   ├── fd/
+│   └── layout.tsx
+│
+├── api/                      # API routes
+│   ├── calculate/
+│   │   ├── sip/route.ts
+│   │   ├── emi/route.ts
+│   │   └── fd/route.ts
+│   ├── log/route.ts
+│   └── rates/route.ts
+│
+├── components/               # Shared components
+│   ├── ui/                  # shadcn/ui components
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   ├── slider.tsx
+│   │   └── ...
+│   ├── calculators/         # Calculator components
+│   │   ├── CalculatorShell.tsx
+│   │   ├── ResultCard.tsx
+│   │   └── ChartContainer.tsx
+│   ├── layout/
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   └── Sidebar.tsx
+│   └── shared/
+│       ├── Logo.tsx
+│       ├── ThemeToggle.tsx
+│       └── CommandPalette.tsx
+│
+├── lib/                      # Utility functions
+│   ├── calculators/
+│   │   ├── sip.ts
+│   │   ├── emi.ts
+│   │   └── fd.ts
+│   ├── utils.ts
+│   ├── prisma.ts
+│   ├── redis.ts
+│   └── validations.ts
+│
+├── styles/
+│   └── globals.css
+│
+├── types/
+│   ├── calculator.ts
+│   └── api.ts
+│
+└── config/
+    ├── site.ts
+    └── calculators.ts
 
-/**
- * SIP Calculator Implementation
- */
-class FCCalculatorSIP extends FCCalculatorBase {
-    constructor(containerId) {
-        super(containerId, 'sip');
-        
-        this.validationRules = {
-            monthlyInvestment: {
-                min: 500,
-                max: 1000000,
-                step: 500
-            },
-            expectedReturn: {
-                min: 1,
-                max: 30,
-                step: 0.5
-            },
-            timePeriod: {
-                min: 1,
-                max: 40,
-                step: 1
+public/
+├── images/
+├── icons/
+└── fonts/
+
+prisma/
+├── schema.prisma
+└── migrations/
+
+.env.local
+.env.production
+next.config.js
+tailwind.config.ts
+tsconfig.json
+package.json
+docker-compose.yml
+Dockerfile
+```
+
+### 5.2 Key Component Examples
+
+#### SIP Calculator Form
+
+```typescript
+// app/calculators/sip/components/SIPForm.tsx
+'use client';
+
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { calculateSIP } from '@/lib/calculators/sip';
+import { motion } from 'framer-motion';
+
+const sipSchema = z.object({
+  monthlyInvestment: z.number().min(500).max(1000000),
+  expectedReturn: z.number().min(1).max(30),
+  timePeriod: z.number().min(1).max(40),
+});
+
+type SIPFormData = z.infer<typeof sipSchema>;
+
+export function SIPForm() {
+  const [result, setResult] = useState(null);
+  const [isCalculating, setIsCalculating] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<SIPFormData>({
+    resolver: zodResolver(sipSchema),
+    defaultValues: {
+      monthlyInvestment: 5000,
+      expectedReturn: 12,
+      timePeriod: 10,
+    },
+  });
+
+  const values = watch();
+
+  const onSubmit = async (data: SIPFormData) => {
+    setIsCalculating(true);
+    
+    // Client-side calculation
+    const result = calculateSIP(
+      data.monthlyInvestment,
+      data.expectedReturn,
+      data.timePeriod
+    );
+    
+    setResult(result);
+    
+    // Log usage
+    await fetch('/api/log', {
+      method: 'POST',
+      body: JSON.stringify({
+        type: 'sip',
+        input: data,
+        result,
+      }),
+    });
+    
+    setIsCalculating(false);
+  };
+
+  return (
+    <Card className="p-6 bg-gradient-to-br from-background to-secondary/5 backdrop-blur">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        {/* Monthly Investment */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium">
+              Monthly Investment
+            </label>
+            <Input
+              type="number"
+              {...register('monthlyInvestment', { valueAsNumber: true })}
+              className="w-32 text-right"
+              prefix="₹"
+            />
+          </div>
+          <Slider
+            value={[values.monthlyInvestment]}
+            onValueChange={([value]) =>
+              register('monthlyInvestment').onChange({ target: { value } })
             }
-        };
-    }
-    
-    calculate() {
-        const P = parseFloat(this.inputs.monthlyInvestment);
-        const annualRate = parseFloat(this.inputs.expectedReturn);
-        const years = parseFloat(this.inputs.timePeriod);
-        
-        const r = (annualRate / 12) / 100;
-        const n = years * 12;
-        
-        // Future Value formula
-        const FV = P * (((Math.pow(1 + r, n) - 1) / r) * (1 + r));
-        
-        this.results = {
-            maturityAmount: Math.round(FV),
-            totalInvested: Math.round(P * n),
-            estimatedReturns: Math.round(FV - (P * n)),
-            wealthGain: (((FV - (P * n)) / (P * n)) * 100).toFixed(2)
-        };
-        
-        this.displayResults();
-        this.generateCharts();
-        this.trackUsage();
-    }
-    
-    displayResults() {
-        // Render results HTML
-    }
-    
-    generateCharts() {
-        // Create pie chart and growth chart using Chart.js
-    }
+            min={500}
+            max={100000}
+            step={500}
+            className="w-full"
+          />
+          <div className="flex justify-between text-xs text-muted-foreground">
+            <span>₹500</span>
+            <span>₹1,00,000</span>
+          </div>
+        </div>
+
+        {/* Expected Return */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium">
+              Expected Return (p.a.)
+            </label>
+            <Input
+              type="number"
+              {...register('expectedReturn', { valueAsNumber: true })}
+              className="w-32 text-right"
+              suffix="%"
+            />
+          </div>
+          <Slider
+            value={[values.expectedReturn]}
+            onValueChange={([value]) =>
+              register('expectedReturn').onChange({ target: { value } })
+            }
+            min={1}
+            max={30}
+            step={0.5}
+            className="w-full"
+          />
+        </div>
+
+        {/* Time Period */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label className="text-sm font-medium">
+              Time Period
+            </label>
+            <Input
+              type="number"
+              {...register('timePeriod', { valueAsNumber: true })}
+              className="w-32 text-right"
+              suffix="years"
+            />
+          </div>
+          <Slider
+            value={[values.timePeriod]}
+            onValueChange={([value]) =>
+              register('timePeriod').onChange({ target: { value } })
+            }
+            min={1}
+            max={40}
+            step={1}
+            className="w-full"
+          />
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full"
+          size="lg"
+          disabled={isCalculating}
+        >
+          {isCalculating ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Calculating...
+            </>
+          ) : (
+            'Calculate Returns'
+          )}
+        </Button>
+      </form>
+
+      {result && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8"
+        >
+          <SIPResults data={result} />
+        </motion.div>
+      )}
+    </Card>
+  );
 }
-```
-
-### 5.2 REST API Endpoints
-
-```php
-<?php
-/**
- * Custom REST API for calculators
- * File: includes/class-calculator-api.php
- */
-
-class FC_Calculator_API {
-    
-    public function __construct() {
-        add_action('rest_api_init', array($this, 'register_routes'));
-    }
-    
-    public function register_routes() {
-        $namespace = 'fc/v1';
-        
-        // Calculator endpoints
-        register_rest_route($namespace, '/calculate/sip', array(
-            'methods' => 'POST',
-            'callback' => array($this, 'calculate_sip'),
-            'permission_callback' => '__return_true',
-            'args' => $this->get_sip_args()
-        ));
-        
-        register_rest_route($namespace, '/calculate/emi', array(
-            'methods' => 'POST',
-            'callback' => array($this, 'calculate_emi'),
-            'permission_callback' => '__return_true',
-            'args' => $this->get_emi_args()
-        ));
-        
-        // Usage logging endpoint
-        register_rest_route($namespace, '/log', array(
-            'methods' => 'POST',
-            'callback' => array($this, 'log_usage'),
-            'permission_callback' => '__return_true'
-        ));
-        
-        // Interest rates endpoint
-        register_rest_route($namespace, '/rates', array(
-            'methods' => 'GET',
-            'callback' => array($this, 'get_interest_rates'),
-            'permission_callback' => '__return_true',
-            'args' => array(
-                'bank' => array('required' => false),
-                'product' => array('required' => false)
-            )
-        ));
-    }
-    
-    public function calculate_sip($request) {
-        $params = $request->get_params();
-        
-        $P = floatval($params['monthlyInvestment']);
-        $r = (floatval($params['expectedReturn']) / 12) / 100;
-        $n = floatval($params['timePeriod']) * 12;
-        
-        $FV = $P * (((pow(1 + $r, $n) - 1) / $r) * (1 + $r));
-        $totalInvested = $P * $n;
-        
-        return new WP_REST_Response(array(
-            'success' => true,
-            'data' => array(
-                'maturityAmount' => round($FV),
-                'totalInvested' => round($totalInvested),
-                'estimatedReturns' => round($FV - $totalInvested),
-                'wealthGain' => round((($FV - $totalInvested) / $totalInvested) * 100, 2)
-            )
-        ), 200);
-    }
-    
-    private function get_sip_args() {
-        return array(
-            'monthlyInvestment' => array(
-                'required' => true,
-                'type' => 'number',
-                'minimum' => 500,
-                'maximum' => 1000000
-            ),
-            'expectedReturn' => array(
-                'required' => true,
-                'type' => 'number',
-                'minimum' => 1,
-                'maximum' => 30
-            ),
-            'timePeriod' => array(
-                'required' => true,
-                'type' => 'integer',
-                'minimum' => 1,
-                'maximum' => 40
-            )
-        );
-    }
-}
-
-new FC_Calculator_API();
-```
-
-### 5.3 Theme Structure
-
-```
-astra-child/
-├── style.css (theme metadata)
-├── functions.php (theme setup)
-├── header.php
-├── footer.php
-├── index.php
-├── single.php
-├── page.php
-├── page-calculator.php (custom template)
-├── sidebar.php
-├── assets/
-│   ├── css/
-│   │   ├── main.css
-│   │   ├── calculator.css
-│   │   └── responsive.css
-│   ├── js/
-│   │   ├── main.js
-│   │   ├── calculators/
-│   │   │   ├── sip.js
-│   │   │   ├── emi.js
-│   │   │   └── fd.js
-│   │   └── vendor/
-│   │       └── chart.min.js
-│   └── images/
-├── template-parts/
-│   ├── calculator-header.php
-│   ├── calculator-footer.php
-│   └── related-calculators.php
-└── inc/
-    ├── customizer.php
-    ├── template-functions.php
-    └── enqueue-scripts.php
 ```
 
 ---
 
-## 6. Security Architecture
+## 6. Backend API
 
-### 6.1 Security Layers
+### 6.1 API Routes
 
-```yaml
-Layer 1: Network Security (Cloudflare)
-  - DDoS mitigation (automatic)
-  - Web Application Firewall (WAF)
-  - SSL/TLS encryption (TLS 1.3)
-  - IP reputation filtering
-  - Rate limiting (100 requests/minute per IP)
+```typescript
+// app/api/calculate/sip/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { calculateSIP } from '@/lib/calculators/sip';
+import { rateLimit } from '@/lib/rate-limit';
 
-Layer 2: Server Security (Hosting)
-  - SSH key authentication only (no password)
-  - Firewall (UFW) - only ports 80, 443, 22 open
-  - Automatic security updates
-  - Fail2ban for brute force protection
-  - ModSecurity (if Apache)
+const sipSchema = z.object({
+  monthlyInvestment: z.number().min(500).max(1000000),
+  expectedReturn: z.number().min(1).max(30),
+  timePeriod: z.number().min(1).max(40),
+});
 
-Layer 3: Application Security (WordPress)
-  - Strong password policy (min 12 chars, mixed case, numbers, symbols)
-  - Two-factor authentication (2FA) for all admin users
-  - Limited login attempts (3 tries, 15 min lockout)
-  - File permissions (644 files, 755 directories)
-  - Disable file editing from admin panel
-  - XML-RPC disabled (unless needed)
-  - Remove WordPress version info
-  - Hide login URL (change from /wp-admin)
+export async function POST(req: NextRequest) {
+  try {
+    // Rate limiting
+    const identifier = req.ip ?? 'anonymous';
+    const { success } = await rateLimit.limit(identifier);
+    
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Too many requests' },
+        { status: 429 }
+      );
+    }
 
-Layer 4: Data Security
-  - Input sanitization (all user inputs)
-  - Output escaping (prevent XSS)
-  - Prepared statements (prevent SQL injection)
-  - CSRF tokens on forms
-  - IP address anonymization (GDPR)
-  - Secure cookies (httponly, secure flags)
+    // Validate request body
+    const body = await req.json();
+    const data = sipSchema.parse(body);
+
+    // Calculate
+    const result = calculateSIP(
+      data.monthlyInvestment,
+      data.expectedReturn,
+      data.timePeriod
+    );
+
+    return NextResponse.json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid input', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
 ```
 
-### 6.2 WordPress Hardening
+### 6.2 Calculator Logic
 
-```php
-<?php
-// wp-config.php security enhancements
+```typescript
+// lib/calculators/sip.ts
+export interface SIPInput {
+  monthlyInvestment: number;
+  expectedReturn: number;
+  timePeriod: number;
+}
 
-// Disable file editing from admin panel
-define('DISALLOW_FILE_EDIT', true);
+export interface SIPResult {
+  maturityAmount: number;
+  totalInvested: number;
+  estimatedReturns: number;
+  wealthGain: number;
+  yearlyBreakdown: {
+    year: number;
+    invested: number;
+    returns: number;
+    total: number;
+  }[];
+}
 
-// Limit post revisions
-define('WP_POST_REVISIONS', 5);
+export function calculateSIP(
+  monthlyInvestment: number,
+  expectedReturn: number,
+  timePeriod: number
+): SIPResult {
+  const r = (expectedReturn / 12) / 100;
+  const n = timePeriod * 12;
 
-// Increase autosave interval
-define('AUTOSAVE_INTERVAL', 300); // 5 minutes
+  // Future Value formula
+  const FV = monthlyInvestment * (((Math.pow(1 + r, n) - 1) / r) * (1 + r));
+  const totalInvested = monthlyInvestment * n;
+  const estimatedReturns = FV - totalInvested;
+  const wealthGain = (estimatedReturns / totalInvested) * 100;
 
-// Security keys (generate unique values from api.wordpress.org/secret-key/1.1/salt/)
-define('AUTH_KEY',         'put-unique-phrase-here');
-define('SECURE_AUTH_KEY',  'put-unique-phrase-here');
-define('LOGGED_IN_KEY',    'put-unique-phrase-here');
-define('NONCE_KEY',        'put-unique-phrase-here');
-define('AUTH_SALT',        'put-unique-phrase-here');
-define('SECURE_AUTH_SALT', 'put-unique-phrase-here');
-define('LOGGED_IN_SALT',   'put-unique-phrase-here');
-define('NONCE_SALT',       'put-unique-phrase-here');
+  // Yearly breakdown
+  const yearlyBreakdown = [];
+  for (let year = 1; year <= timePeriod; year++) {
+    const months = year * 12;
+    const invested = monthlyInvestment * months;
+    const fv = monthlyInvestment * (((Math.pow(1 + r, months) - 1) / r) * (1 + r));
+    const returns = fv - invested;
 
-// Change database table prefix (not wp_)
-$table_prefix = 'fc_';
+    yearlyBreakdown.push({
+      year,
+      invested: Math.round(invested),
+      returns: Math.round(returns),
+      total: Math.round(fv),
+    });
+  }
 
-// Force SSL for admin and login
-define('FORCE_SSL_ADMIN', true);
-
-// Disable XML-RPC
-add_filter('xmlrpc_enabled', '__return_false');
-
-// Remove WordPress version
-remove_action('wp_head', 'wp_generator');
-```
-
-### 6.3 Data Protection & Privacy
-
-```yaml
-GDPR Compliance:
-  - Privacy Policy page (required)
-  - Cookie consent banner
-  - Data export capability (user request)
-  - Data deletion capability (user request)
-  - IP address anonymization in logs
-  - No data sold to third parties
-  
-Cookie Policy:
-  Essential Cookies:
-    - PHPSESSID (session management)
-    - wordpress_* (authentication)
-    - wp-settings-* (user preferences)
-  
-  Analytics Cookies (optional, user consent):
-    - _ga (Google Analytics)
-    - _gid (Google Analytics)
-    - _gat (Google Analytics)
-  
-  Data Collection:
-    What: Calculator usage, page views, IP (anonymized)
-    Why: Improve service, analytics
-    Retention: 2 years max
-    Third Parties: Google (Analytics, AdSense), Cloudflare
-```
-
-### 6.4 Backup Strategy
-
-```yaml
-Automated Backups:
-  Frequency: Daily (3 AM IST)
-  Retention: 30 days rolling
-  Components:
-    - Database (full backup)
-    - wp-content/ directory
-    - Custom plugins
-    - Theme files
-  Exclude:
-    - wp-content/cache/
-    - wp-content/uploads/ (backed up weekly)
-  
-  Storage Locations:
-    - Primary: Hosting provider (7 days)
-    - Secondary: AWS S3 / Backblaze B2 (30 days)
-    - Tertiary: Local download (weekly, manual)
-  
-Manual Backups:
-  - Before major updates
-  - Before plugin installations
-  - Before code deployments
-  
-Backup Testing:
-  - Monthly restoration test on staging server
-  - Verify data integrity
-  - Document restoration procedure
-
-Recovery Time Objective (RTO): 4 hours
-Recovery Point Objective (RPO): 24 hours
+  return {
+    maturityAmount: Math.round(FV),
+    totalInvested: Math.round(totalInvested),
+    estimatedReturns: Math.round(estimatedReturns),
+    wealthGain: parseFloat(wealthGain.toFixed(2)),
+    yearlyBreakdown,
+  };
+}
 ```
 
 ---
 
-## 7. Performance Requirements
+## 7. UI/UX Design System
 
-### 7.1 Performance Targets
+### 7.1 Color Palette
+
+```typescript
+// tailwind.config.ts
+import type { Config } from 'tailwindcss';
+
+const config: Config = {
+  darkMode: 'class',
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
+  theme: {
+    extend: {
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(142, 76%, 36%)',
+          foreground: 'hsl(0, 0%, 100%)',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+      fontFamily: {
+        sans: ['var(--font-inter)'],
+        mono: ['var(--font-mono)'],
+      },
+      animation: {
+        'fade-in': 'fade-in 0.5s ease-out',
+        'slide-up': 'slide-up 0.5s ease-out',
+        'slide-down': 'slide-down 0.5s ease-out',
+      },
+      keyframes: {
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'slide-up': {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        'slide-down': {
+          '0%': { transform: 'translateY(-20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+      },
+    },
+  },
+  plugins: [
+    require('tailwindcss-animate'),
+    require('@tailwindcss/typography'),
+  ],
+};
+
+export default config;
+```
+
+### 7.2 Typography
+
+```css
+/* app/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-inter: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    /* Light mode */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    
+    /* ... other colors */
+    
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark mode */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    
+    /* ... other colors */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+  
+  h2 {
+    @apply text-3xl md:text-4xl lg:text-5xl;
+  }
+}
+```
+
+---
+
+## 8. Performance Strategy
+
+### 8.1 Performance Targets
 
 ```yaml
-Page Load Time (Mobile):
-  Target: < 2 seconds
-  Acceptable: < 3 seconds
-  Critical: > 5 seconds (requires immediate action)
-
-Page Load Time (Desktop):
-  Target: < 1.5 seconds
-  Acceptable: < 2.5 seconds
-  Critical: > 4 seconds
-
-Google PageSpeed Insights:
-  Mobile Score: 85+ (target: 90+)
-  Desktop Score: 95+ (target: 98+)
+Lighthouse Scores (Target):
+  Performance: 95+
+  Accessibility: 100
+  Best Practices: 100
+  SEO: 100
 
 Core Web Vitals:
-  Largest Contentful Paint (LCP): < 2.5s
-  First Input Delay (FID): < 100ms
-  Cumulative Layout Shift (CLS): < 0.1
-  First Contentful Paint (FCP): < 1.8s
-  Time to Interactive (TTI): < 3.8s
+  LCP (Largest Contentful Paint): < 1.5s
+  FID (First Input Delay): < 50ms
+  CLS (Cumulative Layout Shift): < 0.05
 
-Calculator Performance:
-  Calculation Time: < 100ms
-  Chart Rendering: < 500ms
-  Results Display: < 1 second total
+Page Load:
+  First Paint: < 500ms
+  Time to Interactive: < 2s
+  Total Page Weight: < 500KB (gzipped)
 ```
 
-### 7.2 Optimization Techniques
+### 8.2 Optimization Techniques
 
-```yaml
-Frontend Optimization:
-  HTML:
-    - Semantic markup
-    - Minification (production)
-    - Critical CSS inline
-    - Defer non-critical CSS
+```typescript
+// next.config.js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  // Output standalone for Docker
+  output: 'standalone',
   
-  CSS:
-    - Tailwind CSS (purged, tree-shaken)
-    - Minification
-    - Combine files where possible
-    - Remove unused CSS (< 50KB total)
-    - Use CSS Grid/Flexbox (avoid float)
+  // Image optimization
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 365, // 1 year
+  },
   
-  JavaScript:
-    - ES6+ transpiled to ES5
-    - Code splitting (load on demand)
-    - Minification + uglification
-    - Defer non-critical scripts
-    - Async third-party scripts
-    - Remove console logs (production)
-    - Total bundle: < 100KB (gzipped)
+  // Compression
+  compress: true,
   
-  Images:
-    - WebP format (JPEG/PNG fallback)
-    - Lazy loading (native loading="lazy")
-    - Responsive images (srcset, sizes)
-    - Proper sizing (max 1920px width)
-    - Compression (80% quality)
-    - SVG for icons and logos
+  // React compiler (experimental)
+  experimental: {
+    reactCompiler: true,
+    ppr: true, // Partial Prerendering
+  },
   
-  Fonts:
-    - System fonts preferred (fastest)
-    - Google Fonts: font-display: swap
-    - Preload critical fonts
-    - Limit to 2 families, 4 weights max
-    - Subset to Latin characters only
-
-Backend Optimization:
-  PHP:
-    - OPcache enabled (zend_extension=opcache.so)
-    - opcache.memory_consumption=256
-    - opcache.max_accelerated_files=10000
-    - opcache.revalidate_freq=2
-    - php.ini tuning (memory_limit=256M)
-  
-  Database:
-    - Query optimization (use indexes)
-    - Limit post revisions (WP_POST_REVISIONS=5)
-    - Clean up transients regularly
-    - Object caching (Redis)
-    - Database caching layer
-    - Optimize tables weekly
-  
-  Caching Strategy:
-    Browser Cache:
-      - Static assets: 1 year (Cache-Control: max-age=31536000)
-      - HTML pages: No cache (revalidate)
-      - Images: 1 month
-    
-    CDN Cache (Cloudflare):
-      - Calculator pages: 1 hour
-      - Blog posts: 1 week
-      - Homepage: 1 hour
-      - Static assets: 1 week
-    
-    Page Cache (WP Rocket):
-      - Lifespan: 24 hours
-      - Preload cache: Yes
-      - Mobile cache: Separate
-      - User cache: No (unless logged in)
-    
-    Object Cache (Redis):
-      - Database queries: 5-60 minutes (based on freshness needs)
-      - Transients: As set by WordPress/plugins
-      - Calculator results: 15 minutes (if server-side)
-    
-    Opcode Cache (OPcache):
-      - PHP files: Until deployment
-      - Revalidate: 2 seconds (development), Never (production)
-
-Server Optimization:
-  HTTP:
-    - HTTP/2 enabled (multiplexing)
-    - HTTP/3 (QUIC) if supported
-    - Keep-Alive: ON (timeout 5s, max 100)
-    - Persistent connections
-  
-  Compression:
-    - Gzip: Level 6 (balance compression vs CPU)
-    - Brotli: Level 6 (better than gzip)
-    - Compress: HTML, CSS, JS, JSON, XML, SVG
-    - Min size: 1KB
-  
-  Connection:
-    - DNS prefetch for third-party domains
-    - Preconnect to critical origins
-    - Resource hints (preload, prefetch)
-```
-
-### 7.3 Monitoring & Alerts
-
-```yaml
-Performance Monitoring Tools:
-  - Google PageSpeed Insights (weekly manual check)
-  - GTmetrix (automated weekly reports)
-  - Pingdom (uptime + response time monitoring)
-  - Cloudflare Analytics (real-time)
-  - WordPress Query Monitor (development only)
-
-Alert Thresholds:
-  Warning:
-    - Page load time > 3 seconds
-    - Server response time > 500ms
-    - Error rate > 1%
-    - CPU usage > 70%
-    - Memory usage > 80%
-  
-  Critical:
-    - Page load time > 5 seconds
-    - Server response time > 1 second
-    - Error rate > 5%
-    - CPU usage > 90%
-    - Memory usage > 95%
-    - Downtime > 5 minutes
-
-Notification Channels:
-  - Email (all alerts)
-  - SMS (critical alerts only)
-  - Slack (development team channel)
-```
-
----
-
-## 8. API Specifications
-
-### 8.1 REST API Endpoints
-
-#### Base URL
-```
-https://financecalc.in/wp-json/fc/v1/
-```
-
-#### Authentication
-```
-No authentication required for public endpoints.
-Admin endpoints require WordPress authentication (cookie or application password).
-```
-
-#### Endpoints
-
-**1. Calculate SIP**
-```yaml
-POST /calculate/sip
-
-Request Body:
-{
-  "monthlyInvestment": 5000,    # Number, required, 500-1000000
-  "expectedReturn": 12,          # Number, required, 1-30 (annual %)
-  "timePeriod": 10               # Number, required, 1-40 (years)
-}
-
-Response (200 OK):
-{
-  "success": true,
-  "data": {
-    "maturityAmount": 1161695,
-    "totalInvested": 600000,
-    "estimatedReturns": 561695,
-    "wealthGain": 93.62
-  }
-}
-
-Error Response (400 Bad Request):
-{
-  "success": false,
-  "error": {
-    "code": "invalid_parameter",
-    "message": "Monthly investment must be between 500 and 1000000"
-  }
-}
-```
-
-**2. Calculate EMI**
-```yaml
-POST /calculate/emi
-
-Request Body:
-{
-  "loanAmount": 5000000,         # Number, required, 50000-100000000
-  "interestRate": 8.5,           # Number, required, 5-20 (annual %)
-  "loanTenure": 20               # Number, required, 1-30 (years)
-}
-
-Response (200 OK):
-{
-  "success": true,
-  "data": {
-    "emi": 43391,
-    "totalInterest": 5413840,
-    "totalAmount": 10413840,
-    "interestPercentage": 108.28,
-    "amortizationSchedule": [ /* first 12 months */ ]
-  }
-}
-```
-
-**3. Get Interest Rates**
-```yaml
-GET /rates?bank=sbi&product=home_loan&tenure=240
-
-Query Parameters:
-  - bank: String, optional (e.g., "sbi", "hdfc", "icici")
-  - product: String, optional (e.g., "home_loan", "fd", "rd")
-  - tenure: Number, optional (months)
-
-Response (200 OK):
-{
-  "success": true,
-  "data": [
-    {
-      "bank": "SBI",
-      "product": "Home Loan",
-      "rateType": "Fixed",
-      "tenure": 240,
-      "interestRate": 8.5,
-      "effectiveFrom": "2024-01-01",
-      "lastUpdated": "2024-10-01T00:00:00Z"
+  // Bundle analyzer
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Bundle size optimization
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          commons: {
+            name: 'commons',
+            minChunks: 2,
+            priority: 20,
+          },
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            priority: 10,
+            reuseExistingChunk: true,
+          },
+        },
+      };
     }
-  ],
-  "count": 1
-}
-```
+    return config;
+  },
+};
 
-**4. Log Calculator Usage**
-```yaml
-POST /log
-
-Request Body:
-{
-  "type": "sip",
-  "inputs": { /* calculator inputs */ },
-  "results": { /* calculation results */ }
-}
-
-Response (201 Created):
-{
-  "success": true,
-  "message": "Usage logged successfully"
-}
-```
-
-### 8.2 Rate Limiting
-
-```yaml
-Public Endpoints:
-  - 100 requests per minute per IP
-  - 1000 requests per hour per IP
-  - Exceeded: HTTP 429 (Too Many Requests)
-
-Response Headers:
-  X-RateLimit-Limit: 100
-  X-RateLimit-Remaining: 95
-  X-RateLimit-Reset: 1633024800
-```
-
-### 8.3 Error Codes
-
-```yaml
-400 Bad Request:
-  - invalid_parameter
-  - missing_required_field
-  - validation_failed
-
-404 Not Found:
-  - endpoint_not_found
-  - resource_not_found
-
-429 Too Many Requests:
-  - rate_limit_exceeded
-
-500 Internal Server Error:
-  - server_error
-  - database_error
-  - calculation_error
-
-503 Service Unavailable:
-  - maintenance_mode
-  - temporary_unavailable
+module.exports = nextConfig;
 ```
 
 ---
 
-## 9. Deployment Architecture
+## 9. Deployment Setup
 
-### 9.1 Environments
+### 9.1 Portainer Deployment Steps
 
-```yaml
-Development (Local):
-  URL: http://financecalc.local
-  Purpose: Feature development, testing
-  Configuration:
-    - WP_DEBUG: true
-    - WP_DEBUG_LOG: true
-    - WP_DEBUG_DISPLAY: true
-    - SCRIPT_DEBUG: true
-    - No caching
-    - Sample data
-  Tools:
-    - Local by Flywheel OR Docker
-    - Git (version control)
-    - VS Code / PHPStorm
+```bash
+# 1. SSH into your local server
+ssh user@your-server-ip
 
-Staging:
-  URL: https://staging.financecalc.in
-  Purpose: Pre-production testing, QA
-  Configuration:
-    - WP_DEBUG: false
-    - WP_DEBUG_LOG: true
-    - Production-like environment
-    - Same server specs as production
-    - Password protected (HTTP auth)
-    - robots.txt: Disallow all
-  Access: Team only (HTTP auth: username/password)
-  Database: Copy of production (sanitized)
-  
-Production:
-  URL: https://financecalc.in
-  Purpose: Live website
-  Configuration:
-    - WP_DEBUG: false
-    - WP_DEBUG_LOG: true (file only, not displayed)
-    - Full caching enabled
-    - CDN enabled
-    - Monitoring active
-    - Backups automated
-  Access: Public
+# 2. Install Docker & Docker Compose
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+
+# 3. Install Portainer
+docker volume create portainer_data
+docker run -d -p 8000:8000 -p 9000:9000 --name=portainer \
+  --restart=always \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v portainer_data:/data \
+  portainer/portainer-ce:latest
+
+# 4. Access Portainer
+# Open browser: http://your-server-ip:9000
+# Create admin account
+
+# 5. Clone repository
+git clone https://github.com/sumrendra/finance-calculator-india.git
+cd finance-calculator-india
+
+# 6. Create .env file
+cp .env.example .env.production
+nano .env.production
+# Add your environment variables
+
+# 7. Deploy via Portainer Web UI
+# Stacks → Add Stack → Upload docker-compose.yml
+# Or use Portainer git integration
+
+# 8. Start containers
+docker-compose up -d
+
+# 9. Check logs
+docker-compose logs -f web
+
+# 10. Setup SSL (Let's Encrypt)
+docker run -it --rm \
+  -v /etc/letsencrypt:/etc/letsencrypt \
+  -v /var/www/certbot:/var/www/certbot \
+  certbot/certbot certonly --webroot \
+  -w /var/www/certbot \
+  -d financecalc.in \
+  -d www.financecalc.in \
+  --email your@email.com \
+  --agree-tos --no-eff-email
 ```
 
-### 9.2 Deployment Process
+### 9.2 Environment Variables
 
-```yaml
-Deployment Workflow:
-  1. Development:
-     - Create feature branch from 'develop'
-     - Develop and test locally
-     - Commit changes with meaningful messages
-     - Push to GitHub
-  
-  2. Code Review:
-     - Create Pull Request to 'develop'
-     - Automated tests run (CI)
-     - Team review and approval
-     - Merge to 'develop'
-  
-  3. Staging Deployment:
-     - Auto-deploy 'develop' to staging
-     - QA testing on staging
-     - Stakeholder review
-     - Bug fixes (if needed)
-  
-  4. Production Deployment:
-     - Create PR from 'develop' to 'main'
-     - Final approval
-     - Merge to 'main'
-     - Manual trigger production deployment
-     - Smoke tests
-     - Monitor for 1 hour
+```bash
+# .env.production
+NODE_ENV=production
 
-Deployment Checklist:
-  Pre-Deployment:
-    ☐ All tests passing
-    ☐ Code reviewed and approved
-    ☐ Database migrations tested
-    ☐ Staging validated
-    ☐ Backup created (DB + files)
-    ☐ Rollback plan documented
-    ☐ Team notified
-    ☐ Maintenance window scheduled (if needed)
-  
-  During Deployment:
-    ☐ Enable maintenance mode (if major)
-    ☐ Pull latest code
-    ☐ Run database migrations
-    ☐ Clear all caches (object, page, CDN)
-    ☐ Update dependencies (composer, npm)
-    ☐ Verify file permissions
-    ☐ Test critical functionality
-  
-  Post-Deployment:
-    ☐ Disable maintenance mode
-    ☐ Monitor error logs (30 min)
-    ☐ Check Google Analytics real-time
-    ☐ Test all calculators
-    ☐ Verify AdSense ads display
-    ☐ Check mobile responsiveness
-    ☐ Update documentation
-    ☐ Notify team of success
+# Database
+DATABASE_URL="postgresql://postgres:strongpassword@db:5432/financecalc?schema=public"
+DB_PASSWORD=strongpassword
 
-Rollback Procedure:
-  If issues detected within 1 hour:
-    1. Immediately revert to previous version (git revert)
-    2. Restore database from backup (if schema changed)
-    3. Clear all caches
-    4. Verify site stability
-    5. Investigate issue
-    6. Fix and re-deploy
+# Redis
+REDIS_URL="redis://:redispassword@cache:6379"
+REDIS_PASSWORD=redispassword
+
+# NextAuth.js
+NEXTAUTH_SECRET=your-super-secret-key-change-this
+NEXTAUTH_URL=https://financecalc.in
+
+# Google Analytics
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+
+# Google AdSense
+NEXT_PUBLIC_ADSENSE_ID=ca-pub-XXXXXXXXXX
+
+# Cloudflare
+CLOUDFLARE_API_TOKEN=your-cloudflare-token
 ```
 
-### 9.3 CI/CD Pipeline (Phase 2)
+### 9.3 Backup Strategy
 
-```yaml
-Tool: GitHub Actions
+```bash
+# Automated backup script (backup.sh)
+#!/bin/bash
+DATE=$(date +%Y%m%d_%H%M%S)
+BACKUP_DIR="/backups"
 
-Workflow File (.github/workflows/deploy.yml):
-  
-  name: Deploy to Staging/Production
-  
-  on:
-    push:
-      branches: [develop, main]
-  
-  jobs:
-    test:
-      runs-on: ubuntu-latest
-      steps:
-        - Checkout code
-        - Setup PHP 8.2
-        - Install dependencies (composer)
-        - Run PHP_CodeSniffer (WordPress standards)
-        - Run PHPUnit tests
-        - Run JavaScript tests (Jest)
-    
-    deploy-staging:
-      needs: test
-      if: github.ref == 'refs/heads/develop'
-      runs-on: ubuntu-latest
-      steps:
-        - Checkout code
-        - Deploy to staging server (SSH)
-        - Clear caches
-        - Run smoke tests
-        - Notify team (Slack)
-    
-    deploy-production:
-      needs: test
-      if: github.ref == 'refs/heads/main'
-      runs-on: ubuntu-latest
-      environment: production
-      steps:
-        - Manual approval required
-        - Checkout code
-        - Create backup
-        - Deploy to production server (SSH)
-        - Run database migrations
-        - Clear caches
-        - Run smoke tests
-        - Notify team (Slack + Email)
+# Backup PostgreSQL
+docker exec finance-calculator-db pg_dump -U postgres financecalc | \
+  gzip > $BACKUP_DIR/db_$DATE.sql.gz
 
-Automated Tests:
-  - PHP Code Standards (PHPCS)
-  - Unit Tests (PHPUnit)
-  - JavaScript Tests (Jest)
-  - Integration Tests (Postman/Newman)
-  - E2E Tests (Playwright) [Phase 3]
+# Backup uploaded files (if any)
+tar -czf $BACKUP_DIR/files_$DATE.tar.gz /data/uploads
+
+# Backup to S3 (optional)
+aws s3 sync $BACKUP_DIR s3://your-backup-bucket/finance-calculator/
+
+# Keep only last 30 days
+find $BACKUP_DIR -type f -mtime +30 -delete
+
+# Add to crontab
+# 0 2 * * * /path/to/backup.sh
 ```
 
 ---
 
-## 10. Monitoring & Observability
+## 10. Development Workflow
 
-### 10.1 Application Monitoring
+### 10.1 Local Development
 
-```yaml
-Tools:
-  - Google Analytics 4 (user behavior)
-  - Google Search Console (SEO health)
-  - Cloudflare Analytics (performance, security)
-  - Uptime Robot (uptime monitoring)
-  - WordPress Query Monitor (performance debugging, dev only)
-  - New Relic / AppDynamics (APM, optional Phase 3)
+```bash
+# Clone repository
+git clone https://github.com/sumrendra/finance-calculator-india.git
+cd finance-calculator-india/app
 
-Metrics to Track:
-  Traffic:
-    - Pageviews (daily, weekly, monthly)
-    - Unique visitors
-    - Traffic sources (organic, direct, referral, social)
-    - Top pages
-    - Bounce rate
-    - Session duration
-    - Pages per session
-  
-  Performance:
-    - Page load time (avg, median, p95, p99)
-    - Server response time (TTFB)
-    - Database query time
-    - Cache hit ratio
-    - Core Web Vitals (LCP, FID, CLS)
-    - Error rate (4xx, 5xx)
-  
-  Business:
-    - Calculator usage (by type)
-    - Calculator completion rate
-    - AdSense revenue (daily, monthly)
-    - Ad impressions & clicks
-    - CTR (click-through rate)
-    - RPM (revenue per mille)
-    - Affiliate clicks
-  
-  Security:
-    - Failed login attempts
-    - Blocked IPs
-    - Malware scans (daily)
-    - SSL certificate expiry
-    - Plugin vulnerabilities
+# Install dependencies
+npm install
 
-Dashboards:
-  - Real-time: Cloudflare Analytics
-  - Daily: Google Analytics 4 (custom dashboard)
-  - Weekly: Performance report (automated email)
-  - Monthly: Business metrics report (management)
+# Setup database (local Postgres or Docker)
+docker-compose -f docker-compose.dev.yml up -d db cache
+
+# Run Prisma migrations
+npx prisma migrate dev
+
+# Start development server
+npm run dev
+
+# Open browser
+# http://localhost:3000
+
+# Prisma Studio (database GUI)
+npx prisma studio
 ```
 
-### 10.2 Error Tracking
+### 10.2 Git Workflow
 
 ```yaml
-Error Logging:
-  PHP Errors:
-    - Location: /wp-content/debug.log
-    - Rotation: Daily, 7 days retention
-    - Alert: Email on fatal errors
-  
-  JavaScript Errors:
-    - Tool: Sentry (optional, Phase 2)
-    - Capture: Uncaught exceptions, promise rejections
-    - Context: User agent, page URL, user ID (if logged in)
-  
-  Server Errors:
-    - Location: /var/log/nginx/error.log OR /var/log/apache2/error.log
-    - Rotation: Weekly, 4 weeks retention
-    - Alert: Email on 5xx errors
+Branches:
+  main: Production-ready code
+  develop: Development branch
+  feature/*: New features
+  fix/*: Bug fixes
 
-Error Response Workflow:
-  1. Error detected and logged
-  2. Alert sent (if severity > warning)
-  3. Developer investigates
-  4. Fix implemented and tested
-  5. Deploy to production
-  6. Verify fix in monitoring
-  7. Post-mortem (if customer-facing)
+Workflow:
+  1. Create feature branch from develop
+  2. Make changes
+  3. Run tests: npm test
+  4. Run linting: npm run lint
+  5. Build: npm run build
+  6. Create PR to develop
+  7. Review & merge
+  8. Deploy to staging
+  9. Test
+  10. Merge develop to main
+  11. Deploy to production (Portainer)
 ```
 
-### 10.3 Health Checks
+### 10.3 CI/CD Pipeline
 
 ```yaml
-Automated Health Checks (every 5 minutes):
-  1. Uptime:
-     - HTTP status 200 on homepage
-     - Response time < 2 seconds
-  
-  2. Functionality:
-     - SIP calculator loads
-     - EMI calculator loads
-     - Database connection active
-  
-  3. External Services:
-     - Google Analytics loading
-     - AdSense ads displaying
-     - CDN working
-  
-  4. Security:
-     - SSL certificate valid
-     - No malware detected
-     - Firewall active
+# .github/workflows/deploy.yml
+name: Deploy to Production
 
-Alert Conditions:
-  - 3 consecutive failures → Warning (email)
-  - 5 consecutive failures → Critical (email + SMS)
-  - Downtime > 5 minutes → Critical (escalate to on-call)
+on:
+  push:
+    branches: [main]
 
-Incident Response:
-  1. Acknowledge incident
-  2. Assess severity
-  3. Notify stakeholders (if public-facing)
-  4. Investigate root cause
-  5. Implement fix
-  6. Verify resolution
-  7. Document incident
-  8. Schedule post-mortem
-```
-
----
-
-## 11. Development Workflow
-
-### 11.1 Git Workflow
-
-```yaml
-Branch Strategy: Git Flow
-
-Main Branches:
-  main:
-    - Production-ready code
-    - Protected (no direct commits)
-    - Merge via PR only
-    - Tagged releases (v1.0.0, v1.1.0, etc.)
-  
-  develop:
-    - Integration branch
-    - Latest development changes
-    - Auto-deploys to staging
-    - Merge via PR from feature branches
-
-Supporting Branches:
-  feature/*:
-    - New features
-    - Branch from: develop
-    - Merge back to: develop
-    - Naming: feature/sip-calculator, feature/emi-calculator
-  
-  bugfix/*:
-    - Non-critical bug fixes
-    - Branch from: develop
-    - Merge back to: develop
-    - Naming: bugfix/calculator-validation-error
-  
-  hotfix/*:
-    - Critical production fixes
-    - Branch from: main
-    - Merge back to: main AND develop
-    - Naming: hotfix/security-patch
-  
-  release/*:
-    - Release preparation
-    - Branch from: develop
-    - Merge back to: main AND develop
-    - Naming: release/v1.1.0
-
-Commit Message Format:
-  type(scope): subject
-  
-  Types:
-    - feat: New feature
-    - fix: Bug fix
-    - docs: Documentation
-    - style: Formatting, no code change
-    - refactor: Code refactoring
-    - test: Adding tests
-    - chore: Maintenance
-  
-  Examples:
-    - feat(calculator): add SIP calculator with charts
-    - fix(emi): correct amortization schedule calculation
-    - docs(readme): update deployment instructions
-```
-
-### 11.2 Code Standards
-
-```yaml
-PHP:
-  Standard: WordPress Coding Standards
-  Tool: PHP_CodeSniffer (phpcs)
-  Configuration: phpcs.xml.dist
-  Rules:
-    - PSR-12 compatible
-    - WordPress-specific hooks and filters
-    - Security: Sanitization, escaping, nonces
-    - Documentation: PHPDoc blocks for all functions/methods
-  
-  Example:
-    <?php
-    /**
-     * Calculate SIP maturity amount.
-     *
-     * @param float $principal Monthly investment amount.
-     * @param float $rate Annual interest rate (percentage).
-     * @param int $years Investment period in years.
-     * @return float Maturity amount.
-     */
-    function fc_calculate_sip( $principal, $rate, $years ) {
-        $r = ( $rate / 12 ) / 100;
-        $n = $years * 12;
-        return $principal * ( ( ( pow( 1 + $r, $n ) - 1 ) / $r ) * ( 1 + $r ) );
-    }
-
-JavaScript:
-  Standard: Airbnb JavaScript Style Guide
-  Tool: ESLint
-  Configuration: .eslintrc.json
-  Rules:
-    - ES6+ features
-    - Semicolons required
-    - Single quotes for strings
-    - 2-space indentation
-    - No console logs in production
-  
-  Example:
-    /**
-     * SIP Calculator class
-     */
-    class SIPCalculator {
-      constructor(containerId) {
-        this.container = document.getElementById(containerId);
-        this.init();
-      }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
       
-      calculate(principal, rate, years) {
-        const r = (rate / 12) / 100;
-        const n = years * 12;
-        return principal * (((Math.pow(1 + r, n) - 1) / r) * (1 + r));
-      }
-    }
-
-CSS:
-  Standard: BEM methodology + Tailwind utility classes
-  Tool: Stylelint
-  Configuration: .stylelintrc.json
-  Rules:
-    - Mobile-first approach
-    - Use Tailwind utilities where possible
-    - Custom CSS only when necessary
-    - BEM naming for custom components
-```
-
-### 11.3 Documentation Standards
-
-```yaml
-Code Documentation:
-  - All functions have PHPDoc/JSDoc comments
-  - Complex logic explained with inline comments
-  - README.md in each plugin/theme directory
-  - API documentation for REST endpoints
-
-Project Documentation:
-  - README.md (project overview)
-  - TECHNICAL_SPECIFICATION.md (this document)
-  - CALCULATOR_FORMULAS.md (formula documentation)
-  - SEO_KEYWORD_RESEARCH.md (SEO strategy)
-  - CHANGELOG.md (version history)
-  - DEPLOYMENT.md (deployment guide)
-
-Inline Documentation:
-  Good:
-    // Calculate monthly rate from annual percentage
-    const monthlyRate = (annualRate / 12) / 100;
-  
-  Bad:
-    // Divide by 12 and 100
-    const r = (rate / 12) / 100;
-```
-
----
-
-## 12. Testing Strategy
-
-### 12.1 Testing Levels
-
-```yaml
-Unit Testing:
-  Tool: PHPUnit (PHP), Jest (JavaScript)
-  Coverage Target: 70%+
-  Scope:
-    - Calculator logic functions
-    - Input validation functions
-    - Utility functions
-    - API endpoint logic
-  
-  Example (PHPUnit):
-    class SIPCalculatorTest extends WP_UnitTestCase {
-      public function test_sip_calculation() {
-        $result = fc_calculate_sip(5000, 12, 10);
-        $this->assertEquals(1161695, round($result));
-      }
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
       
-      public function test_invalid_input() {
-        $this->expectException(InvalidArgumentException::class);
-        fc_calculate_sip(-1000, 12, 10);
-      }
-    }
-
-Integration Testing:
-  Tool: Postman / Newman
-  Scope:
-    - REST API endpoints
-    - Database operations
-    - Third-party integrations (GA, AdSense)
-  
-  Test Cases:
-    - POST /fc/v1/calculate/sip (valid input)
-    - POST /fc/v1/calculate/sip (invalid input)
-    - GET /fc/v1/rates (with filters)
-    - POST /fc/v1/log (usage logging)
-
-End-to-End Testing:
-  Tool: Playwright OR Cypress
-  Scope:
-    - User workflows
-    - Cross-browser testing
-    - Mobile testing
-  
-  Test Scenarios:
-    1. User navigates to SIP calculator
-    2. Enters monthly investment: 10000
-    3. Enters expected return: 12%
-    4. Enters tenure: 5 years
-    5. Clicks "Calculate"
-    6. Verifies results display
-    7. Clicks "Share" button
-    8. Verifies share dialog opens
-
-Performance Testing:
-  Tool: Apache JMeter / k6
-  Scope:
-    - Load testing
-    - Stress testing
-    - Spike testing
-  
-  Scenarios:
-    Normal Load:
-      - 100 concurrent users
-      - 5 requests/second
-      - Duration: 10 minutes
-      - Expected: < 2s response
-    
-    Peak Load:
-      - 500 concurrent users
-      - 25 requests/second
-      - Duration: 5 minutes
-      - Expected: < 3s response
-
-Security Testing:
-  Tool: WPScan, OWASP ZAP
-  Scope:
-    - Vulnerability scanning
-    - Penetration testing
-    - Authentication testing
-  
-  Tests:
-    - SQL injection attempts
-    - XSS (Cross-Site Scripting)
-    - CSRF (Cross-Site Request Forgery)
-    - File upload validation
-    - Authentication bypass
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm test
+      
+      - name: Build
+        run: npm run build
+      
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/user/finance-calculator-india
+            git pull origin main
+            docker-compose down
+            docker-compose up -d --build
 ```
 
-### 12.2 Test Automation
+---
+
+## 11. Future Cloud Migration Options
+
+### When to Migrate (Phase 2+)
 
 ```yaml
-Continuous Integration:
-  - All tests run on every commit to feature branches
-  - Merge blocked if tests fail
-  - Coverage report generated
-  - Code quality checks (PHPCS, ESLint)
+Triggers:
+  - Traffic > 50K pageviews/month
+  - Need better uptime guarantee
+  - Scaling issues on local server
+  - Want global CDN
+  - Need managed database backups
 
-Manual Testing Checklist:
-  Before Each Release:
-    Functionality:
-      ☐ All calculators produce correct results
-      ☐ All forms submit successfully
-      ☐ All links work (no 404s)
-      ☐ Search works
-    
-    Design/UX:
-      ☐ Layout correct on mobile (portrait & landscape)
-      ☐ Layout correct on tablet
-      ☐ Layout correct on desktop
-      ☐ Images load correctly
-      ☐ Fonts display correctly
-    
-    Cross-Browser (latest versions):
-      ☐ Chrome
-      ☐ Firefox
-      ☐ Safari
-      ☐ Edge
-      ☐ Chrome Mobile
-      ☐ Safari Mobile
-    
-    SEO:
-      ☐ Title tags present
-      ☐ Meta descriptions present
-      ☐ Schema markup validates
-      ☐ XML sitemap correct
-      ☐ Robots.txt correct
-    
-    Performance:
-      ☐ PageSpeed Insights: 85+ mobile
-      ☐ PageSpeed Insights: 95+ desktop
-      ☐ Images lazy load
-      ☐ No console errors
-    
-    Monetization:
-      ☐ AdSense ads display
-      ☐ Ads placement correct
-      ☐ Affiliate links work
+Best Options:
+
+1. Vercel (Best for Next.js)
+   Pros:
+     ✓ Zero configuration
+     ✓ Automatic deployments
+     ✓ Global CDN
+     ✓ Serverless functions
+     ✓ Built-in analytics
+   Cons:
+     ✗ More expensive ($20-$40/mo)
+     ✗ Vendor lock-in
+   Cost: $20/mo (Hobby Pro) or $40/mo (Pro)
+
+2. Railway
+   Pros:
+     ✓ Easy to use
+     ✓ GitHub integration
+     ✓ PostgreSQL included
+     ✓ Good pricing
+   Cons:
+     ✗ Newer platform
+   Cost: $5-20/mo (usage-based)
+
+3. DigitalOcean App Platform
+   Pros:
+     ✓ Simple deployment
+     ✓ Managed database option
+     ✓ Good documentation
+   Cons:
+     ✗ Less features than Vercel
+   Cost: $12/mo (App Platform) + $15/mo (Database)
+
+4. AWS Lightsail Containers
+   Pros:
+     ✓ Very cheap
+     ✓ AWS ecosystem
+     ✓ Predictable pricing
+   Cons:
+     ✗ More complex setup
+   Cost: $7-15/mo
+
+Recommendation: Start with Vercel when traffic justifies the cost
 ```
 
 ---
 
-## Appendix A: Technology Decision Matrix
+## Appendix A: Package.json
+
+```json
+{
+  "name": "finance-calculator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:seed": "tsx prisma/seed.ts"
+  },
+  "dependencies": {
+    "next": "^14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@prisma/client": "^5.9.0",
+    "@radix-ui/react-slider": "^1.1.2",
+    "@radix-ui/react-toast": "^1.1.5",
+    "@radix-ui/react-dialog": "^1.0.5",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "framer-motion": "^11.0.0",
+    "react-hook-form": "^7.49.3",
+    "@hookform/resolvers": "^3.3.4",
+    "zod": "^3.22.4",
+    "recharts": "^2.11.0",
+    "tailwind-merge": "^2.2.0",
+    "tailwindcss-animate": "^1.0.7",
+    "ioredis": "^5.3.2",
+    "next-themes": "^0.2.1",
+    "lucide-react": "^0.312.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "typescript": "^5.3.3",
+    "prisma": "^5.9.0",
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.33",
+    "autoprefixer": "^10.4.17",
+    "@tailwindcss/typography": "^0.5.10",
+    "prettier": "^3.2.4",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "^14.1.0",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/jest-dom": "^6.2.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
+}
+```
+
+---
+
+## Appendix B: Quick Start Checklist
 
 ```yaml
-Decision: WordPress vs Custom Development
-Winner: WordPress
-Reasoning:
-  Advantages:
-    ✓ Faster time to market (weeks vs months)
-    ✓ Lower development cost (30-50% savings)
-    ✓ Rich plugin ecosystem
-    ✓ Built-in content management
-    ✓ Excellent SEO out-of-the-box
-    ✓ Large talent pool
-    ✓ Managed hosting options
-  
-  Disadvantages:
-    ✗ Some performance overhead (mitigated with caching)
-    ✗ Plugin dependency (mitigated with careful selection)
-    ✗ Regular updates required (automated where possible)
-  
-  Conclusion: Benefits far outweigh drawbacks for this use case
+Phase 1: Local Setup (Week 1)
+  ☐ Install Docker & Docker Compose
+  ☐ Install Portainer
+  ☐ Clone repository
+  ☐ Configure environment variables
+  ☐ Start containers via Portainer
+  ☐ Run database migrations
+  ☐ Test locally (http://localhost:3000)
+  ☐ Setup Cloudflare DNS
+  ☐ Configure SSL certificates
+  ☐ Deploy to local server
+  ☐ Test production (https://financecalc.in)
 
-Decision: Managed WordPress vs Self-Managed VPS
-Winner: Managed WordPress (Cloudways/WP Engine)
-Reasoning:
-  Phase 1-2 (0-150K pageviews):
-    ✓ Zero DevOps overhead
-    ✓ Optimized for WordPress
-    ✓ Built-in staging, backups, CDN
-    ✓ Focus on content, not infrastructure
-    ✓ Auto-scaling (Cloudways)
-  
-  Phase 3+ (150K+ pageviews):
-    Consider: Self-managed VPS for cost optimization
-    ✓ Better cost-to-performance ratio
-    ✓ More control
-    ✗ Requires DevOps knowledge
+Phase 2: Development (Week 2-4)
+  ☐ Build homepage with beautiful hero section
+  ☐ Implement SIP calculator with animations
+  ☐ Implement EMI calculator with charts
+  ☐ Implement FD calculator with comparisons
+  ☐ Add dark mode toggle
+  ☐ Optimize images & fonts
+  ☐ Add Google Analytics
+  ☐ Add AdSense ads
+  ☐ Write first 5 blog posts
+  ☐ SEO optimization
 
-Decision: React/Vue vs Vanilla JavaScript
-Winner: Vanilla JavaScript (Phase 1-2), React (Phase 3+)
-Reasoning:
-  Phase 1-2:
-    ✓ Faster development (no build setup needed)
-    ✓ Smaller bundle size (better performance)
-    ✓ Sufficient for basic calculators
-    ✓ Lower learning curve for team
-  
-  Phase 3 (Advanced features):
-    ✓ React: Better for complex UIs
-    ✓ Component reusability
-    ✓ State management (Redux)
-    ✓ User accounts, saved calculations
+Phase 3: Polish & Launch (Week 5-6)
+  ☐ Cross-browser testing
+  ☐ Mobile responsiveness
+  ☐ Performance optimization (Lighthouse 95+)
+  ☐ Accessibility audit
+  ☐ Security audit
+  ☐ Backup system setup
+  ☐ Monitoring setup
+  ☐ Soft launch
+  ☐ Collect feedback
+  ☐ Official launch 🚀
 ```
 
 ---
 
-## Appendix B: Glossary
+**End of Technical Specification Document v2.0**
 
-```yaml
-AdSense: Google's advertising platform for publishers
-CDN: Content Delivery Network
-CLS: Cumulative Layout Shift (Core Web Vital)
-CPC: Cost Per Click
-CSS: Cascading Style Sheets
-FCP: First Contentful Paint
-FID: First Input Delay (Core Web Vital)
-LCP: Largest Contentful Paint (Core Web Vital)
-REST API: Representational State Transfer Application Programming Interface
-RPM: Revenue Per Mille (per thousand impressions)
-SIP: Systematic Investment Plan
-TTI: Time to Interactive
-TTFB: Time to First Byte
-VPS: Virtual Private Server
-WAF: Web Application Firewall
-```
+**This modern architecture provides:**
+- ⚡ Blazing fast performance (<1s loads)
+- 🎨 Beautiful, modern UI (shadcn/ui components)
+- 🐳 Easy containerized deployment (Portainer)
+- 📱 Mobile-first responsive design
+- 🔒 Production-ready security
+- 📊 Real-time analytics
+- 🚀 Scalable to cloud when needed
 
----
-
-## Document Approval
-
-| Role | Name | Signature | Date |
-|------|------|-----------|------|
-| Technical Lead | [Name] | | |
-| Project Manager | [Name] | | |
-| CTO | [Name] | | |
-
----
-
-**End of Technical Specification Document**
-
-**Next Steps:**
-1. Review document with team
-2. Finalize hosting provider
-3. Setup development environment
-4. Begin Phase 1 implementation
-
-**Document will be updated as project progresses.**
+**Ready to build something amazing! Let's start with Phase 1.**
