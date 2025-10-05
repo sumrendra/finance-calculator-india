@@ -7,7 +7,7 @@
 **Target Market:** India  
 **Primary Revenue:** Google AdSense (₹25-40 CPC)  
 **Target Revenue:** ₹25K-40K/month by Month 12  
-**Tech Stack:** WordPress, PHP 8.2+, JavaScript, MySQL
+**Tech Stack:** Next.js 14+, TypeScript, PostgreSQL, Docker
 
 ## 📊 Revenue Projections
 
@@ -38,13 +38,13 @@
    - Seasonal SEO opportunities
 
 3. **[docs/TECHNICAL_SPECIFICATION.md](./docs/TECHNICAL_SPECIFICATION.md)** ✅
-   - Complete system architecture (layered design)
-   - Technology stack (WordPress, PHP 8.2+, MySQL, Redis)
-   - Database schema (5 custom tables)
-   - Security architecture (4-layer defense)
-   - Performance optimization strategies
-   - REST API specifications
-   - Deployment workflow & CI/CD
+   - Complete system architecture (containerized design)
+   - Technology stack (Next.js 14+, TypeScript, PostgreSQL, Redis)
+   - Database schema (Prisma ORM)
+   - Security architecture
+   - Performance optimization strategies (Vanilla Extract CSS)
+   - API routes (Next.js serverless)
+   - Deployment workflow (Docker + Portainer)
    - Monitoring & observability
    - Testing strategy
 
@@ -52,10 +52,11 @@
 
 4. **docs/CALCULATOR_FORMULAS.md** (Planned)
    - Mathematical formulas for all calculators
-   - Working JavaScript implementations
-   - PHP backend code
-   - Validation rules
+   - TypeScript implementations
+   - API route handlers
+   - Validation rules (Zod schemas)
    - Example calculations
+   - Unit tests
 
 ## 🚀 Quick Start Guide
 
@@ -64,9 +65,10 @@
 **Week 1-2: Setup**
 ```bash
 # 1. Register domain (financecalc.in)
-# 2. Setup hosting (Cloudways/WP Engine)
-# 3. Install WordPress
+# 2. Setup local server with Docker + Portainer
+# 3. Clone repository and install dependencies
 # 4. Configure SSL & CDN (Cloudflare)
+# 5. Deploy containers via Portainer
 ```
 
 **Week 3-4: Core Calculators**
@@ -144,28 +146,30 @@
 ## 🏗️ Tech Stack
 
 ### Frontend
-- HTML5, CSS3 (Tailwind CSS)
-- JavaScript (ES6+)
-- Chart.js (visualizations)
-- WordPress Theme (Astra/GeneratePress)
+- Next.js 14+ (App Router, SSR/SSG)
+- TypeScript 5+
+- Vanilla Extract (CSS-in-TypeScript)
+- Recharts + Framer Motion (visualizations)
+- Radix UI (accessible components)
 
 ### Backend
-- WordPress 6.4+
-- PHP 8.2+
-- MySQL 8.0+
-- Redis (object caching)
+- Node.js 20 LTS
+- Next.js API Routes
+- PostgreSQL 16 (with Prisma ORM)
+- Redis 7 (caching)
 
 ### Infrastructure
-- Hosting: Cloudways/WP Engine
+- Docker + Docker Compose
+- Portainer CE (container management)
+- Nginx (reverse proxy)
 - CDN: Cloudflare
 - Analytics: Google Analytics 4
-- Monitoring: Google Search Console
+- Monitoring: Grafana + Prometheus
 
-### Plugins (Essential)
-- Rank Math / Yoast SEO
-- W3 Total Cache / WP Rocket
-- Wordfence Security
-- Advanced Ads (AdSense integration)
+### Content Management
+- MDX (Markdown + JSX) for blog posts
+- Git-based content workflow
+- Type-safe content with TypeScript
 
 ## 📈 Success Metrics
 
@@ -196,33 +200,37 @@
 ## 👥 Team Structure
 
 ### Phase 1 (Minimal Team)
-- 1 Developer (WordPress + JavaScript)
-- 1 Content Writer (financial expertise)
+- 1 Full-stack Developer (Next.js + TypeScript)
+- 1 Content Writer (financial expertise + MDX)
 - 1 SEO Specialist (part-time)
 
 ### Phase 2 (Growth Team)
-- 1 Developer
+- 1 Frontend Developer (React/Next.js)
+- 1 Backend Developer (API routes, database)
 - 1 UI/UX Designer
 - 2 Content Writers
 - 1 SEO Specialist
+- 1 DevOps Engineer (part-time)
 - 1 Social Media Manager (part-time)
 
 ## 💰 Initial Investment
 
 ### One-Time Costs
 - Domain: ₹500-1,000/year
-- Theme/Plugins: ₹5,000-10,000
-- Design: ₹5,000-15,000
+- Design System: ₹5,000-15,000 (custom Vanilla Extract components)
 - Initial Content: ₹10,000-20,000
+- Development Setup: ₹2,000-5,000 (server, tools)
 
-**Total: ₹43,500 - ₹72,000**
+**Total: ₹17,500 - ₹41,000**
 
 ### Monthly Recurring
-- Hosting: ₹1,500-3,000
+- Server/Hosting: ₹0-1,500 (local server, then cloud)
 - Content: ₹8,000-15,000
-- Tools: ₹1,000-2,000
+- Tools & Services: ₹1,000-2,000
+- Cloud Migration (Month 6+): ₹5,000-12,000
 
-**Total: ₹11,600 - ₹20,300/month**
+**Total: ₹9,000 - ₹18,500/month** (Phase 1)  
+**Total: ₹14,000 - ₹30,500/month** (Phase 2+, cloud)
 
 ### Break-Even
 **Month 9-10** (Based on conservative estimates)
@@ -230,12 +238,15 @@
 ## 📝 Current Status
 
 - ✅ Project planning complete
-- ✅ Architecture designed
+- ✅ Modern architecture designed (Next.js + Docker)
 - ✅ SEO keyword research done
 - ✅ Content calendar prepared
+- ✅ Technical specification complete
+- ✅ Documentation aligned with modern stack
 - ⏳ Domain registration (pending)
-- ⏳ Hosting setup (pending)
-- ⏳ WordPress installation (pending)
+- ⏳ Local server setup (pending)
+- ⏳ Docker + Portainer installation (pending)
+- ⏳ Next.js development environment (pending)
 - ⏳ Calculator development (pending)
 
 ## 🔗 Useful Resources
@@ -247,10 +258,15 @@
 - Calculator Formulas (coming soon)
 
 ### External Resources
-- [WordPress Codex](https://codex.wordpress.org/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [Vanilla Extract Docs](https://vanilla-extract.style/)
+- [Prisma Documentation](https://www.prisma.io/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Portainer Documentation](https://docs.portainer.io/)
 - [Google Search Console](https://search.google.com/search-console)
 - [Google Analytics](https://analytics.google.com/)
-- [Chart.js Documentation](https://www.chartjs.org/)
+- [Recharts Documentation](https://recharts.org/)
 
 ## 📞 Next Actions
 
@@ -262,18 +278,27 @@
 
 2. **Week 1**
    - [ ] Register domain
-   - [ ] Setup hosting & WordPress
-   - [ ] Install theme & essential plugins
+   - [ ] Setup local server (Docker + Portainer)
+   - [ ] Clone repository and setup development environment
+   - [ ] Configure Cloudflare CDN & SSL
    - [ ] Configure analytics
 
 3. **Week 2**
-   - [ ] Develop SIP Calculator
-   - [ ] Create calculator landing page
-   - [ ] Setup SEO foundation
+   - [ ] Setup Next.js project structure
+   - [ ] Configure Vanilla Extract styling system
+   - [ ] Setup Prisma ORM and PostgreSQL
+   - [ ] Create base UI components (Button, Card, Input)
 
-4. **Week 3-4**
-   - [ ] Develop EMI & FD calculators
-   - [ ] Write first 5 blog posts
+4. **Week 3**
+   - [ ] Develop SIP Calculator component
+   - [ ] Create calculator landing page with MDX
+   - [ ] Setup SEO foundation (metadata, sitemap)
+   - [ ] Deploy to Portainer
+
+5. **Week 4**
+   - [ ] Develop EMI Calculator
+   - [ ] Develop FD Calculator
+   - [ ] Write first 5 blog posts (MDX)
    - [ ] Submit sitemap to Google
 
 ## 📄 License
@@ -282,8 +307,8 @@ This project documentation is proprietary and confidential.
 
 ---
 
-**Last Updated:** October 4, 2025  
-**Version:** 1.0  
-**Status:** Planning Phase
+**Last Updated:** October 5, 2025  
+**Version:** 2.0  
+**Status:** Planning Phase - Modern Architecture
 
 For questions or clarifications, refer to the detailed documentation in the `docs/` folder.

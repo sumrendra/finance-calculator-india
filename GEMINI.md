@@ -27,4 +27,10 @@ The project is currently in the planning phase. The documents outline a multi-ph
 
 The files in this directory are intended to be used as a blueprint for the development and launch of the Finance Calculator Hub website. They provide a comprehensive plan for the project, from technical implementation to content creation and marketing.
 
-The project will be developed using WordPress, with a focus on a mobile-first design and fast loading times. The core of the site will be a set of financial calculators, supported by a blog with SEO-optimized articles. Monetization will be primarily through Google AdSense, with plans for affiliate marketing and other revenue streams in later phases.
+The project will be developed using **Next.js 14+ with TypeScript**, deployed via Docker containers managed by Portainer. The architecture focuses on mobile-first design and blazing-fast loading times (<1s). The core of the site will be a set of financial calculators built with React components, supported by a blog with SEO-optimized articles written in MDX (Markdown + JSX). Monetization will be primarily through Google AdSense, with plans for affiliate marketing and other revenue streams in later phases.
+
+**Key Technologies:**
+- Frontend: Next.js 14+, TypeScript, Vanilla Extract CSS
+- Backend: Node.js, PostgreSQL, Prisma ORM
+- Infrastructure: Docker, Portainer, Nginx
+- Content: MDX (Git-based, version controlled)
