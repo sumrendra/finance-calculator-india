@@ -16,7 +16,7 @@
 Build a **world-class financial calculator platform** with:
 - 🎨 **Beautiful UI** - Inspired by Stripe, Linear, Vercel, Framer
 - ⚡ **Blazing Fast** - <1s page loads, instant calculations
-- 🏗️ **Modern Stack** - Next.js 14+, TypeScript, Tailwind CSS
+- 🏗️ **Modern Stack** - Next.js 14+, TypeScript, Vanilla Extract CSS
 - 🐳 **Containerized** - Docker containers managed via Portainer
 - 📱 **Mobile-First** - Responsive design, PWA capabilities
 - 🎯 **SEO Optimized** - Server-side rendering, perfect Lighthouse scores
@@ -52,7 +52,7 @@ Build a **world-class financial calculator platform** with:
 Frontend Framework:
   Framework: Next.js 14+ (App Router)
   Language: TypeScript 5+
-  Styling: Tailwind CSS 3+ + shadcn/ui
+  Styling: Vanilla Extract + CSS Modules
   State: Zustand (lightweight, <1KB)
   Forms: React Hook Form + Zod
   Charts: Recharts + Framer Motion
@@ -89,28 +89,39 @@ Deployment Targets:
     - AWS Lightsail Containers ($7/mo)
 ```
 
-### 1.2 UI Component Library
+### 1.2 Styling & UI Architecture
 
 ```yaml
-Component System: shadcn/ui
-Why: 
-  ✓ Beautiful by default (inspired by Linear, Vercel)
-  ✓ Radix UI primitives (accessible, unstyled)
-  ✓ Tailwind CSS (utility-first, customizable)
-  ✓ Copy-paste components (no npm install)
-  ✓ TypeScript native
-  ✓ Dark mode built-in
+Styling System: Vanilla Extract (Type-safe CSS-in-TypeScript)
+Why Vanilla Extract:
+  ✓ Zero-runtime CSS-in-TypeScript
+  ✓ Type-safe styles (autocomplete, type checking)
+  ✓ Scoped styles (no naming conflicts)
+  ✓ Excellent performance (static CSS extraction)
+  ✓ Tree-shakeable (only used styles in bundle)
+  ✓ CSS Variables support (theming, dark mode)
+  ✓ Used by: Seek, Atlassian Design System
+  ✓ Better than: CSS Modules (no type safety), Tailwind (no semantic naming)
 
-Key Components We'll Use:
-  - Button (with variants, sizes, loading states)
-  - Card (glassmorphism, shadows, borders)
-  - Input (with icons, validation states)
-  - Slider (smooth animations, tooltips)
-  - Tabs (calculator types)
-  - Dialog (modals for detailed results)
-  - Toast (notifications)
-  - Sheet (mobile sidebar)
-  - Accordion (FAQs)
+Component Primitives: Radix UI
+Why:
+  ✓ Unstyled, accessible components
+  ✓ WAI-ARIA compliant
+  ✓ Keyboard navigation built-in
+  ✓ Focus management
+  ✓ Screen reader optimized
+  ✓ TypeScript native
+
+Key Components We'll Build:
+  - Button (with variants via Vanilla Extract)
+  - Card (glassmorphism effects with CSS)
+  - Input (with custom focus states)
+  - Slider (Radix primitive + custom styles)
+  - Tabs (Radix Tabs + animations)
+  - Dialog (Radix Dialog + backdrop blur)
+  - Toast (Radix Toast + spring animations)
+  - Sheet (side drawer for mobile)
+  - Accordion (Radix Accordion + smooth expand)
 
 Animation Library: Framer Motion
 Why:
@@ -118,12 +129,13 @@ Why:
   ✓ Gesture support (drag, swipe)
   ✓ Layout animations (magic move)
   ✓ Spring physics (natural feel)
+  ✓ Works seamlessly with Vanilla Extract
   
 Chart Library: Recharts + D3.js
 Why:
   ✓ Responsive charts
   ✓ Smooth animations
-  ✓ Customizable
+  ✓ Highly customizable with CSS
   ✓ TypeScript support
 ```
 
@@ -705,7 +717,9 @@ app/
 │   │   ├── page.tsx
 │   │   └── components/
 │   │       ├── SIPForm.tsx
+│   │       ├── SIPForm.css.ts         # Vanilla Extract styles
 │   │       ├── SIPResults.tsx
+│   │       ├── SIPResults.css.ts
 │   │       └── SIPChart.tsx
 │   ├── emi/
 │   ├── fd/
@@ -720,11 +734,19 @@ app/
 │   └── rates/route.ts
 │
 ├── components/               # Shared components
-│   ├── ui/                  # shadcn/ui components
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── input.tsx
-│   │   ├── slider.tsx
+│   ├── ui/                  # Custom UI components
+│   │   ├── button/
+│   │   │   ├── Button.tsx
+│   │   │   └── Button.css.ts
+│   │   ├── card/
+│   │   │   ├── Card.tsx
+│   │   │   └── Card.css.ts
+│   │   ├── input/
+│   │   │   ├── Input.tsx
+│   │   │   └── Input.css.ts
+│   │   ├── slider/
+│   │   │   ├── Slider.tsx
+│   │   │   └── Slider.css.ts
 │   │   └── ...
 │   ├── calculators/         # Calculator components
 │   │   ├── CalculatorShell.tsx
@@ -732,6 +754,7 @@ app/
 │   │   └── ChartContainer.tsx
 │   ├── layout/
 │   │   ├── Header.tsx
+│   │   ├── Header.css.ts
 │   │   ├── Footer.tsx
 │   │   └── Sidebar.tsx
 │   └── shared/
@@ -750,7 +773,10 @@ app/
 │   └── validations.ts
 │
 ├── styles/
-│   └── globals.css
+│   ├── theme.css.ts         # Design tokens (Vanilla Extract)
+│   ├── global.css.ts        # Global styles
+│   ├── vars.css.ts          # CSS variables
+│   └── utils.css.ts         # Utility style functions
 │
 ├── types/
 │   ├── calculator.ts
@@ -772,7 +798,7 @@ prisma/
 .env.local
 .env.production
 next.config.js
-tailwind.config.ts
+vanilla-extract.config.ts
 tsconfig.json
 package.json
 docker-compose.yml
@@ -781,7 +807,7 @@ Dockerfile
 
 ### 5.2 Key Component Examples
 
-#### SIP Calculator Form
+#### SIP Calculator Form Component
 
 ```typescript
 // app/calculators/sip/components/SIPForm.tsx
@@ -791,12 +817,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Slider } from '@/components/ui/slider';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Slider } from '@/components/ui/slider/Slider';
+import { Input } from '@/components/ui/input/Input';
+import { Button } from '@/components/ui/button/Button';
+import { Card } from '@/components/ui/card/Card';
 import { calculateSIP } from '@/lib/calculators/sip';
 import { motion } from 'framer-motion';
+import * as styles from './SIPForm.css';
 
 const sipSchema = z.object({
   monthlyInvestment: z.number().min(500).max(1000000),
@@ -829,7 +856,6 @@ export function SIPForm() {
   const onSubmit = async (data: SIPFormData) => {
     setIsCalculating(true);
     
-    // Client-side calculation
     const result = calculateSIP(
       data.monthlyInvestment,
       data.expectedReturn,
@@ -838,32 +864,24 @@ export function SIPForm() {
     
     setResult(result);
     
-    // Log usage
     await fetch('/api/log', {
       method: 'POST',
-      body: JSON.stringify({
-        type: 'sip',
-        input: data,
-        result,
-      }),
+      body: JSON.stringify({ type: 'sip', input: data, result }),
     });
     
     setIsCalculating(false);
   };
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-background to-secondary/5 backdrop-blur">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-        {/* Monthly Investment */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium">
-              Monthly Investment
-            </label>
+    <Card className={styles.formCard}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+        <div className={styles.fieldGroup}>
+          <div className={styles.fieldHeader}>
+            <label className={styles.label}>Monthly Investment</label>
             <Input
               type="number"
               {...register('monthlyInvestment', { valueAsNumber: true })}
-              className="w-32 text-right"
+              className={styles.numberInput}
               prefix="₹"
             />
           </div>
@@ -875,24 +893,20 @@ export function SIPForm() {
             min={500}
             max={100000}
             step={500}
-            className="w-full"
           />
-          <div className="flex justify-between text-xs text-muted-foreground">
+          <div className={styles.sliderLabels}>
             <span>₹500</span>
             <span>₹1,00,000</span>
           </div>
         </div>
 
-        {/* Expected Return */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium">
-              Expected Return (p.a.)
-            </label>
+        <div className={styles.fieldGroup}>
+          <div className={styles.fieldHeader}>
+            <label className={styles.label}>Expected Return (p.a.)</label>
             <Input
               type="number"
               {...register('expectedReturn', { valueAsNumber: true })}
-              className="w-32 text-right"
+              className={styles.numberInput}
               suffix="%"
             />
           </div>
@@ -904,20 +918,16 @@ export function SIPForm() {
             min={1}
             max={30}
             step={0.5}
-            className="w-full"
           />
         </div>
 
-        {/* Time Period */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium">
-              Time Period
-            </label>
+        <div className={styles.fieldGroup}>
+          <div className={styles.fieldHeader}>
+            <label className={styles.label}>Time Period</label>
             <Input
               type="number"
               {...register('timePeriod', { valueAsNumber: true })}
-              className="w-32 text-right"
+              className={styles.numberInput}
               suffix="years"
             />
           </div>
@@ -929,24 +939,17 @@ export function SIPForm() {
             min={1}
             max={40}
             step={1}
-            className="w-full"
           />
         </div>
 
         <Button
           type="submit"
-          className="w-full"
-          size="lg"
+          variant="primary"
+          size="large"
+          fullWidth
           disabled={isCalculating}
         >
-          {isCalculating ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Calculating...
-            </>
-          ) : (
-            'Calculate Returns'
-          )}
+          {isCalculating ? 'Calculating...' : 'Calculate Returns'}
         </Button>
       </form>
 
@@ -955,7 +958,7 @@ export function SIPForm() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="mt-8"
+          className={styles.resultsContainer}
         >
           <SIPResults data={result} />
         </motion.div>
@@ -963,6 +966,63 @@ export function SIPForm() {
     </Card>
   );
 }
+```
+
+#### SIP Calculator Form Styles (Vanilla Extract)
+
+```typescript
+// app/calculators/sip/components/SIPForm.css.ts
+import { style } from '@vanilla-extract/css';
+import { vars } from '@/styles/theme.css';
+
+export const formCard = style({
+  padding: vars.spacing.lg,
+  background: `linear-gradient(135deg, ${vars.colors.background} 0%, ${vars.colors.backgroundSubtle} 100%)`,
+  backdropFilter: 'blur(10px)',
+  borderRadius: vars.radius.lg,
+  border: `1px solid ${vars.colors.border}`,
+  boxShadow: vars.shadows.lg,
+});
+
+export const form = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.spacing.xl,
+});
+
+export const fieldGroup = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.spacing.md,
+});
+
+export const fieldHeader = style({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+});
+
+export const label = style({
+  fontSize: vars.fontSize.sm,
+  fontWeight: vars.fontWeight.medium,
+  color: vars.colors.foreground,
+});
+
+export const numberInput = style({
+  width: '128px',
+  textAlign: 'right',
+});
+
+export const sliderLabels = style({
+  display: 'flex',
+  justifyContent: 'space-between',
+  fontSize: vars.fontSize.xs,
+  color: vars.colors.foregroundMuted,
+});
+
+export const resultsContainer = style({
+  marginTop: vars.spacing.xl,
+});
 ```
 
 ---
@@ -1095,147 +1155,426 @@ export function calculateSIP(
 
 ## 7. UI/UX Design System
 
-### 7.1 Color Palette
+### 7.1 Design Tokens (Vanilla Extract)
 
 ```typescript
-// tailwind.config.ts
-import type { Config } from 'tailwindcss';
+// styles/theme.css.ts
+import { createGlobalTheme, createThemeContract } from '@vanilla-extract/css';
 
-const config: Config = {
-  darkMode: 'class',
-  content: [
-    './app/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
-  ],
-  theme: {
-    extend: {
-      colors: {
-        border: 'hsl(var(--border))',
-        input: 'hsl(var(--input))',
-        ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
-        primary: {
-          DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))',
+// Define theme contract for type safety
+export const vars = createThemeContract({
+  colors: {
+    // Base colors
+    background: '',
+    backgroundSubtle: '',
+    foreground: '',
+    foregroundMuted: '',
+    
+    // Primary colors
+    primary: '',
+    primaryHover: '',
+    primaryActive: '',
+    primaryForeground: '',
+    
+    // Secondary colors
+    secondary: '',
+    secondaryHover: '',
+    secondaryForeground: '',
+    
+    // Semantic colors
+    success: '',
+    successForeground: '',
+    error: '',
+    errorForeground: '',
+    warning: '',
+    warningForeground: '',
+    info: '',
+    infoForeground: '',
+    
+    // UI colors
+    border: '',
+    borderSubtle: '',
+    input: '',
+    ring: '',
+    muted: '',
+    accent: '',
+  },
+  spacing: {
+    xs: '',
+    sm: '',
+    md: '',
+    lg: '',
+    xl: '',
+    '2xl': '',
+    '3xl': '',
+  },
+  fontSize: {
+    xs: '',
+    sm: '',
+    base: '',
+    lg: '',
+    xl: '',
+    '2xl': '',
+    '3xl': '',
+    '4xl': '',
+    '5xl': '',
+    '6xl': '',
+  },
+  fontWeight: {
+    normal: '',
+    medium: '',
+    semibold: '',
+    bold: '',
+  },
+  lineHeight: {
+    tight: '',
+    normal: '',
+    relaxed: '',
+  },
+  radius: {
+    sm: '',
+    md: '',
+    lg: '',
+    xl: '',
+    full: '',
+  },
+  shadows: {
+    sm: '',
+    md: '',
+    lg: '',
+    xl: '',
+  },
+  transitions: {
+    fast: '',
+    normal: '',
+    slow: '',
+  },
+});
+
+// Light theme
+export const lightTheme = createGlobalTheme(':root', vars, {
+  colors: {
+    background: 'hsl(0, 0%, 100%)',
+    backgroundSubtle: 'hsl(210, 40%, 98%)',
+    foreground: 'hsl(222.2, 84%, 4.9%)',
+    foregroundMuted: 'hsl(215.4, 16.3%, 46.9%)',
+    
+    primary: 'hsl(222.2, 47.4%, 11.2%)',
+    primaryHover: 'hsl(222.2, 47.4%, 18%)',
+    primaryActive: 'hsl(222.2, 47.4%, 8%)',
+    primaryForeground: 'hsl(210, 40%, 98%)',
+    
+    secondary: 'hsl(210, 40%, 96.1%)',
+    secondaryHover: 'hsl(210, 40%, 92%)',
+    secondaryForeground: 'hsl(222.2, 47.4%, 11.2%)',
+    
+    success: 'hsl(142, 76%, 36%)',
+    successForeground: 'hsl(0, 0%, 100%)',
+    error: 'hsl(0, 84.2%, 60.2%)',
+    errorForeground: 'hsl(0, 0%, 100%)',
+    warning: 'hsl(38, 92%, 50%)',
+    warningForeground: 'hsl(0, 0%, 100%)',
+    info: 'hsl(199, 89%, 48%)',
+    infoForeground: 'hsl(0, 0%, 100%)',
+    
+    border: 'hsl(214.3, 31.8%, 91.4%)',
+    borderSubtle: 'hsl(214.3, 31.8%, 95%)',
+    input: 'hsl(214.3, 31.8%, 91.4%)',
+    ring: 'hsl(222.2, 84%, 4.9%)',
+    muted: 'hsl(210, 40%, 96.1%)',
+    accent: 'hsl(210, 40%, 96.1%)',
+  },
+  spacing: {
+    xs: '0.25rem',
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem',
+    xl: '2rem',
+    '2xl': '3rem',
+    '3xl': '4rem',
+  },
+  fontSize: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem',
+    '6xl': '3.75rem',
+  },
+  fontWeight: {
+    normal: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+  lineHeight: {
+    tight: '1.25',
+    normal: '1.5',
+    relaxed: '1.75',
+  },
+  radius: {
+    sm: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
+    full: '9999px',
+  },
+  shadows: {
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+    md: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+    lg: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+    xl: '0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)',
+  },
+  transitions: {
+    fast: '150ms cubic-bezier(0.4, 0, 0.2, 1)',
+    normal: '300ms cubic-bezier(0.4, 0, 0.2, 1)',
+    slow: '500ms cubic-bezier(0.4, 0, 0.2, 1)',
+  },
+});
+
+// Dark theme
+export const darkTheme = createGlobalTheme('[data-theme="dark"]', vars, {
+  colors: {
+    background: 'hsl(222.2, 84%, 4.9%)',
+    backgroundSubtle: 'hsl(217.2, 32.6%, 17.5%)',
+    foreground: 'hsl(210, 40%, 98%)',
+    foregroundMuted: 'hsl(215, 20.2%, 65.1%)',
+    
+    primary: 'hsl(210, 40%, 98%)',
+    primaryHover: 'hsl(210, 40%, 92%)',
+    primaryActive: 'hsl(210, 40%, 88%)',
+    primaryForeground: 'hsl(222.2, 47.4%, 11.2%)',
+    
+    secondary: 'hsl(217.2, 32.6%, 17.5%)',
+    secondaryHover: 'hsl(217.2, 32.6%, 22%)',
+    secondaryForeground: 'hsl(210, 40%, 98%)',
+    
+    success: 'hsl(142, 71%, 45%)',
+    successForeground: 'hsl(0, 0%, 100%)',
+    error: 'hsl(0, 62.8%, 30.6%)',
+    errorForeground: 'hsl(0, 0%, 100%)',
+    warning: 'hsl(38, 92%, 50%)',
+    warningForeground: 'hsl(0, 0%, 100%)',
+    info: 'hsl(199, 89%, 48%)',
+    infoForeground: 'hsl(0, 0%, 100%)',
+    
+    border: 'hsl(217.2, 32.6%, 17.5%)',
+    borderSubtle: 'hsl(217.2, 32.6%, 14%)',
+    input: 'hsl(217.2, 32.6%, 17.5%)',
+    ring: 'hsl(212.7, 26.8%, 83.9%)',
+    muted: 'hsl(217.2, 32.6%, 17.5%)',
+    accent: 'hsl(217.2, 32.6%, 17.5%)',
+  },
+  // Spacing, fontSize, etc. remain the same
+  spacing: lightTheme.spacing,
+  fontSize: lightTheme.fontSize,
+  fontWeight: lightTheme.fontWeight,
+  lineHeight: lightTheme.lineHeight,
+  radius: lightTheme.radius,
+  shadows: {
+    sm: '0 1px 2px 0 rgb(0 0 0 / 0.5)',
+    md: '0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.5)',
+    lg: '0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5)',
+    xl: '0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5)',
+  },
+  transitions: lightTheme.transitions,
+});
+```
+
+### 7.2 Global Styles & Typography
+
+```typescript
+// styles/global.css.ts
+import { globalStyle } from '@vanilla-extract/css';
+import { vars } from './theme.css';
+
+// Reset and base styles
+globalStyle('*, *::before, *::after', {
+  boxSizing: 'border-box',
+  margin: 0,
+  padding: 0,
+});
+
+globalStyle('html', {
+  fontSize: '16px',
+  fontFamily: '"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  WebkitFontSmoothing: 'antialiased',
+  MozOsxFontSmoothing: 'grayscale',
+  textRendering: 'optimizeLegibility',
+});
+
+globalStyle('body', {
+  backgroundColor: vars.colors.background,
+  color: vars.colors.foreground,
+  lineHeight: vars.lineHeight.normal,
+  fontFeatureSettings: '"rlig" 1, "calt" 1',
+  minHeight: '100vh',
+});
+
+// Typography
+globalStyle('h1, h2, h3, h4, h5, h6', {
+  fontWeight: vars.fontWeight.semibold,
+  lineHeight: vars.lineHeight.tight,
+  letterSpacing: '-0.025em',
+});
+
+globalStyle('h1', {
+  fontSize: vars.fontSize['4xl'],
+  '@media': {
+    '(min-width: 768px)': {
+      fontSize: vars.fontSize['5xl'],
+    },
+    '(min-width: 1024px)': {
+      fontSize: vars.fontSize['6xl'],
+    },
+  },
+});
+
+globalStyle('h2', {
+  fontSize: vars.fontSize['3xl'],
+  '@media': {
+    '(min-width: 768px)': {
+      fontSize: vars.fontSize['4xl'],
+    },
+    '(min-width: 1024px)': {
+      fontSize: vars.fontSize['5xl'],
+    },
+  },
+});
+
+globalStyle('h3', {
+  fontSize: vars.fontSize['2xl'],
+  '@media': {
+    '(min-width: 768px)': {
+      fontSize: vars.fontSize['3xl'],
+    },
+  },
+});
+
+globalStyle('p', {
+  marginBottom: vars.spacing.md,
+  lineHeight: vars.lineHeight.relaxed,
+});
+
+globalStyle('a', {
+  color: vars.colors.primary,
+  textDecoration: 'none',
+  transition: `color ${vars.transitions.fast}`,
+  ':hover': {
+    color: vars.colors.primaryHover,
+  },
+});
+
+// Focus styles
+globalStyle('*:focus-visible', {
+  outline: `2px solid ${vars.colors.ring}`,
+  outlineOffset: '2px',
+});
+```
+
+### 7.3 Example Button Component
+
+```typescript
+// components/ui/button/Button.css.ts
+import { style, styleVariants } from '@vanilla-extract/css';
+import { vars } from '@/styles/theme.css';
+import { recipe } from '@vanilla-extract/recipes';
+
+export const button = recipe({
+  base: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: vars.radius.md,
+    fontSize: vars.fontSize.sm,
+    fontWeight: vars.fontWeight.medium,
+    transition: `all ${vars.transitions.fast}`,
+    cursor: 'pointer',
+    border: 'none',
+    outline: 'none',
+    textDecoration: 'none',
+    userSelect: 'none',
+    whiteSpace: 'nowrap',
+    ':disabled': {
+      opacity: 0.5,
+      cursor: 'not-allowed',
+    },
+    ':focus-visible': {
+      outline: `2px solid ${vars.colors.ring}`,
+      outlineOffset: '2px',
+    },
+  },
+  
+  variants: {
+    variant: {
+      primary: {
+        backgroundColor: vars.colors.primary,
+        color: vars.colors.primaryForeground,
+        ':hover': {
+          backgroundColor: vars.colors.primaryHover,
+          transform: 'translateY(-1px)',
+          boxShadow: vars.shadows.md,
         },
-        secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
-          foreground: 'hsl(var(--secondary-foreground))',
-        },
-        success: {
-          DEFAULT: 'hsl(142, 76%, 36%)',
-          foreground: 'hsl(0, 0%, 100%)',
-        },
-        destructive: {
-          DEFAULT: 'hsl(var(--destructive))',
-          foreground: 'hsl(var(--destructive-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
-        },
-        accent: {
-          DEFAULT: 'hsl(var(--accent))',
-          foreground: 'hsl(var(--accent-foreground))',
+        ':active': {
+          backgroundColor: vars.colors.primaryActive,
+          transform: 'translateY(0)',
         },
       },
-      borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
-      },
-      fontFamily: {
-        sans: ['var(--font-inter)'],
-        mono: ['var(--font-mono)'],
-      },
-      animation: {
-        'fade-in': 'fade-in 0.5s ease-out',
-        'slide-up': 'slide-up 0.5s ease-out',
-        'slide-down': 'slide-down 0.5s ease-out',
-      },
-      keyframes: {
-        'fade-in': {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+      secondary: {
+        backgroundColor: vars.colors.secondary,
+        color: vars.colors.secondaryForeground,
+        ':hover': {
+          backgroundColor: vars.colors.secondaryHover,
         },
-        'slide-up': {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
+      },
+      outline: {
+        backgroundColor: 'transparent',
+        border: `1px solid ${vars.colors.border}`,
+        color: vars.colors.foreground,
+        ':hover': {
+          backgroundColor: vars.colors.secondary,
         },
-        'slide-down': {
-          '0%': { transform: 'translateY(-20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
+      },
+      ghost: {
+        backgroundColor: 'transparent',
+        color: vars.colors.foreground,
+        ':hover': {
+          backgroundColor: vars.colors.secondary,
         },
       },
     },
+    size: {
+      small: {
+        height: '32px',
+        padding: `0 ${vars.spacing.sm}`,
+        fontSize: vars.fontSize.xs,
+      },
+      medium: {
+        height: '40px',
+        padding: `0 ${vars.spacing.md}`,
+      },
+      large: {
+        height: '48px',
+        padding: `0 ${vars.spacing.lg}`,
+        fontSize: vars.fontSize.base,
+      },
+    },
+    fullWidth: {
+      true: {
+        width: '100%',
+      },
+    },
   },
-  plugins: [
-    require('tailwindcss-animate'),
-    require('@tailwindcss/typography'),
-  ],
-};
-
-export default config;
-```
-
-### 7.2 Typography
-
-```css
-/* app/globals.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  :root {
-    --font-inter: 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    
-    /* Light mode */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-    
-    /* ... other colors */
-    
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    /* Dark mode */
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    
-    /* ... other colors */
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
   
-  body {
-    @apply bg-background text-foreground font-sans;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
-  }
-  
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
-  }
-  
-  h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
-  }
-  
-  h2 {
-    @apply text-3xl md:text-4xl lg:text-5xl;
-  }
-}
+  defaultVariants: {
+    variant: 'primary',
+    size: 'medium',
+  },
+});
 ```
 
 ---
@@ -1264,8 +1603,11 @@ Page Load:
 
 ### 8.2 Optimization Techniques
 
-```typescript
+```javascript
 // next.config.js
+const { createVanillaExtractPlugin } = require('@vanilla-extract/next-plugin');
+const withVanillaExtract = createVanillaExtractPlugin();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Output standalone for Docker
@@ -1315,7 +1657,7 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withVanillaExtract(nextConfig);
 ```
 
 ---
@@ -1614,15 +1956,16 @@ Recommendation: Start with Vercel when traffic justifies the cost
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-dialog": "^1.0.5",
-    "class-variance-authority": "^0.7.0",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-accordion": "^1.1.2",
+    "@vanilla-extract/css": "^1.14.0",
+    "@vanilla-extract/recipes": "^0.5.0",
     "clsx": "^2.1.0",
     "framer-motion": "^11.0.0",
     "react-hook-form": "^7.49.3",
     "@hookform/resolvers": "^3.3.4",
     "zod": "^3.22.4",
     "recharts": "^2.11.0",
-    "tailwind-merge": "^2.2.0",
-    "tailwindcss-animate": "^1.0.7",
     "ioredis": "^5.3.2",
     "next-themes": "^0.2.1",
     "lucide-react": "^0.312.0"
@@ -1633,12 +1976,9 @@ Recommendation: Start with Vercel when traffic justifies the cost
     "@types/react-dom": "^18.2.18",
     "typescript": "^5.3.3",
     "prisma": "^5.9.0",
-    "tailwindcss": "^3.4.1",
-    "postcss": "^8.4.33",
-    "autoprefixer": "^10.4.17",
-    "@tailwindcss/typography": "^0.5.10",
+    "@vanilla-extract/next-plugin": "^2.3.2",
+    "@vanilla-extract/vite-plugin": "^4.0.5",
     "prettier": "^3.2.4",
-    "prettier-plugin-tailwindcss": "^0.5.11",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.1.0",
     "@testing-library/react": "^14.1.2",
